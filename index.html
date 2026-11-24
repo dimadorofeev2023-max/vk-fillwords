@@ -145,20 +145,8 @@ window.addEventListener('message', e => {
   }
 });
 
-  if (window.vkBridge) {
-    window.vkBridge.subscribe(e => {
-      if (e.detail && e.detail.type === 'VKWebAppUpdateConfig' && e.detail.data.scheme && e.detail.data.scheme.includes('dark')) document.body.classList.add('dark');
-    });
-  }
-  sendVK('VKWebAppInit').then(() => {
-    sendVK('VKWebAppGetUserInfo').then(d => {
-      if (d && d.first_name) {
-        user = Object.assign(user, d);
-        saveScoreToCloud().then(loadRealLeaders);
-        render();
-      }
-    });
-  });
+ sendVK('VKWebAppInit'); 
+sendVK('VKWebAppGetUserInfo', { request_id: 'u1' });
 
   function getHeaders(extra = {}) {
     const h = { 'apikey': SB_KEY, 'Content-Type': 'application/json' };
