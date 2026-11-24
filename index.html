@@ -126,9 +126,13 @@
   let realLeaders = [];
 
   function sendVK(m, p = {}) {
-    try { window.parent.postMessage({ handler: m, params: p, type: 'vk-connect' }, '*'); } catch (e) {}
-    return Promise.resolve(null);
-  }
+  const str = JSON.stringify(p);
+  try { window.parent.postMessage({ handler: m, params: p, type: 'vk-connect' }, '*'); } catch (e) {}
+  try { if (window.AndroidBridge && window.AndroidBridge[m]) window.AndroidBridge[m](str); } catch (e) {}
+  try { if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers[m]) window.webkit.messageHandlers[m].postMessage(p); } catch (e) {}
+  return Promise.resolve(null);
+}
+
   window.addEventListener('message', e => {
     const d = e.data && (e.data.data || e.data);
     if (d && d.first_name) { user = d; saveScoreToCloud(); render(); }
