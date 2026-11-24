@@ -49,7 +49,7 @@
   <div class="top-bar">
     <div class="pill" style="color:#ff5722;" id="streakBox">🔥 1 дн.</div>
     <div class="pill" style="color:var(--acc);" id="energyBox" onclick="openEnergyModal()">⚡ 5/5</div>
-    <div class="pill" style="color:var(--gold);" id="coinBox">🪙 50</div>
+    <div class="pill" style="color:var(--gold);" id="coinBox">🪙 60</div>
   </div>
   <div id="app"></div>
 </div>
@@ -61,7 +61,7 @@
 </div>
 <canvas id="storyCanvas" width="1080" height="1920" style="display:none;"></canvas>
 <script>
-  const APP_LINK = 'https://vk.com/app54919991';
+  const APP_LINK = 'https://vk.com';
   const REGEN_MS = 10 * 60 * 1000;
   const wordBank = {
     4: ["КОФЕ","МОРЕ","ЛУНА","СНЕГ","ЗВУК","РИТМ","ИГРА","СВЕТ","КЛЮЧ","ПЛАН","МОСТ","ПАРК","ЗНАК","ВКУС","УЮТ","ГРОМ","ШАНС","КЛАД","МАЯК","НЕБО"],
@@ -89,12 +89,12 @@
     { q:"Самый твёрдый природный минерал?", opts:["Алмаз","Кварц","Рубин","Топаз"], ans:"Алмаз" }
   ];
   const oPart1 = ["Уже сегодня вечером", "В ближайшие 48 часов", "До конца этой недели", "Совсем скоро", "Неожиданно для тебя"];
-  const oPart2 = ["тебя ждёт приятный финансовый сюрприз", "появится шанс круто изменить планы к лучшему", "старый знакомый принесёт отличную новость", "твоя смелая идея получит поддержку", "удача сама постучится в дверь"];
+  const oPart2 = ["тебя ждёт приятный сюрприз", "появится шанс круто изменить планы к лучшему", "старый знакомый принесёт отличную новость", "твоя смелая идея получит поддержку", "удача сама постучится в дверь"];
   const oPart3 = ["— главное, не бойся действовать первым!", "— прислушайся к своей интуиции.", "— скажи «да» новым возможностям!", "— просто сохраняй спокойствие и улыбайся."];
 
-  let user = { first_name: 'Гость', photo_100: '' };
-  let state = JSON.parse(localStorage.getItem('vk_fw_v8') || 'null') || {
-    coins: 50, energy: 5, maxE: 5, lastEnergyTs: Date.now(), fwLvl: 1, streak: 1, last: '', daily: '', storyDate: '', bestBlitz: 0, oSeed: 1, owned: [], activeTheme: '', activeAva: '😎', customNick: ''
+  let user = { first_name: 'Игрок' };
+  let state = JSON.parse(localStorage.getItem('vk_fw_clean') || 'null') || {
+    coins: 60, energy: 5, maxE: 5, lastEnergyTs: Date.now(), fwLvl: 1, streak: 1, last: '', daily: '', storyDate: '', wheelDate: '', bestBlitz: 0, oSeed: 1, owned: [], activeTheme: '', activeAva: '😎', customNick: ''
   };
   let curTab = 'fw', fwGrid = [], fwWords = [], fwSel = [], fwDragging = false, fwHintCell = -1;
   let bScore = 0, bLives = 3, bCombo = 1, bTimer = null, bTimeLeft = 12, curBlitzObj = null;
@@ -114,30 +114,36 @@
     } else state.lastEnergyTs = Date.now();
   }
   function save() {
-    syncEnergy(); localStorage.setItem('vk_fw_v8', JSON.stringify(state));
+    syncEnergy(); localStorage.setItem('vk_fw_clean', JSON.stringify(state));
     document.getElementById('coinBox').innerText = '🪙 ' + state.coins;
     document.getElementById('streakBox').innerText = '🔥 ' + state.streak + ' дн.';
     document.getElementById('energyBox').innerText = `⚡ ${state.energy}/${maxE()}`;
   }
   if (state.last !== today) { state.streak = (state.last === new Date(Date.now() - 86400000).toDateString()) ? state.streak + 1 : 1; state.last = today; state.oSeed = Math.floor(Math.random() * 999); }
   save(); setInterval(save, 15000);
+  function sendVK(m, p = {}) {
+    try { window.parent.postMessage({ handler: m, params: p, type: 'vk-connect' }, '*'); } catch (e) {}
+    return Promise.resolve(null);
+  }
+  sendVK('VKWebAppInit');
+
+  function inviteFriend(bonusEnergy) {
+    sendVK('VKWebAppShare', { link: APP_LINK });
+    if (bonusEnergy) {
+      state.energy = Math.min(maxE(), state.energy + 2);
+      save(); render();
+    } else {
+      state.coins += 50;
+      save(); render();
+    }
+  }
+
   function spendEnergy() { syncEnergy(); if (state.energy <= 0) { openEnergyModal(); return false; } if (state.energy === maxE()) state.lastEnergyTs = Date.now(); state.energy--; save(); return true; }
   function openEnergyModal() {
     clearInterval(bTimer);
     const m = Math.max(1, Math.ceil((REGEN_MS - (Date.now() - state.lastEnergyTs)) / 60000));
-    app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:48px;">⚡</div><h2>Энергия закончилась</h2><p>+1 ⚡ через <b>${m} мин.</b>, или зарядись прямо сейчас:</p><button class="btn btn-acc" onclick="sendVK('VKWebAppShowNativeAds',{ad_format:'reward'}).finally(()=>{state.energy=Math.min(maxE(),state.energy+2);save();render();})">🎬 +2 ⚡ за рекламу</button><button class="btn btn-grn" onclick="buyVotes('energy_full',0,true)">💎 Полный заряд за 2 голоса</button><button class="btn btn-gold" onclick="if(state.coins>=100){state.coins-=100;state.energy=maxE();save();render();}else alert('Нужно 100 🪙!')">Полный заряд за 100 🪙</button><button class="btn btn-sec" onclick="render()">← Назад</button></div>`;
+    app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:48px;">⚡</div><h2>Энергия закончилась</h2><p>+1 ⚡ восстановится через <b>${m} мин.</b>, или пополни сейчас:</p><button class="btn btn-acc" onclick="inviteFriend(true)">👥 Позвать друга (+2 ⚡)</button><button class="btn btn-gold" onclick="if(state.coins>=80){state.coins-=80;state.energy=maxE();save();render();}else alert('Нужно 80 🪙!')">Полный заряд за 80 🪙</button><button class="btn btn-sec" onclick="render()">← Назад</button></div>`;
   }
-  function buyVotes(itemCode, addCoins, fullEnergy) {
-    if (!window.vkBridge || !window.vkBridge.send) { alert('Оплата голосами работает только внутри ВКонтакте!'); return; }
-    window.vkBridge.send('VKWebAppShowOrderBox', { type: 'item', item: itemCode }).then(res => {
-      if (res && res.success) { if (addCoins > 0) state.coins += addCoins; if (fullEnergy) state.energy = maxE(); save(); render(); alert('Успешно оплачено! Бонус начислен 🎉'); }
-    }).catch(() => alert('Оплата отменена или ещё не настроена в кабинете ВК.'));
-  }
-  function sendVK(m, p = {}) {
-  try { window.parent.postMessage({ handler: m, params: p, type: 'vk-connect' }, '*'); } catch (e) {}
-  return Promise.resolve(null);
-}
-sendVK('VKWebAppInit');
 
   function switchTab(t, el) { clearInterval(bTimer); curTab = t; document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active')); el.classList.add('active'); render(); }
   function render() { clearInterval(bTimer); if (curTab === 'fw') { if (!fwWords.length) initFillword(false); else renderFillword(); } else if (curTab === 'blitz') renderBlitzHome(); else if (curTab === 'oracle') renderOracle(); else renderProfile(); }
@@ -158,7 +164,7 @@ sendVK('VKWebAppInit');
   function renderFillword() {
     const solvedMap = {}; fwWords.forEach(w => { if (w.found) w.cells.forEach(c => solvedMap[c] = w.color); });
     if (fwWords.every(w => w.found)) {
-      app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:52px;">🎉</div><h2>Уровень ${state.fwLvl} пройден!</h2><p>Базовая награда: <b>+15 🪙</b></p><button class="btn btn-gold" onclick="claimLvl(30,true)">🎬 Забрать x2 (+30 🪙 за рекламу)</button><button class="btn btn-acc" onclick="claimLvl(15,false)">Забрать +15 🪙 и дальше (-1 ⚡)</button><button class="btn btn-story" onclick="story('Филворды','🧩','Я прошёл ${state.fwLvl} уровень!')">📸 В Историю ${state.storyDate===today?'':'(+100 🪙)'}</button></div>`;
+      app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:52px;">🎉</div><h2>Уровень ${state.fwLvl} пройден!</h2><p>Награда за победу: <b>+20 🪙</b></p><button class="btn btn-acc" onclick="state.fwLvl++;state.coins+=20;save();initFillword(true)">Следующий уровень (-1 ⚡)</button><button class="btn btn-story" onclick="story('Филворды','🧩','Я прошёл ${state.fwLvl} уровень!')">📸 В Историю ${state.storyDate===today?'':'(+100 🪙)'}</button></div>`;
       return;
     }
     const tagsHtml = fwWords.map(w => `<span class="fw-tag ${w.found?'done':''}">${w.found ? w.word : '?'.repeat(w.word.length) + ' (' + w.word.length + ')'}</span>`).join('');
@@ -168,16 +174,15 @@ sendVK('VKWebAppInit');
       const bg = solvedMap[i] ? `background:${solvedMap[i]};color:#fff;` : '', cls = `fw-cell ${fwSel.includes(i)?'sel':''} ${fwHintCell===i?'hint':''}`;
       gridHtml += `<div class="${cls}" style="${bg}" data-idx="${i}" onpointerdown="fwStart(${i})" onpointerenter="fwMove(${i})">${fwGrid[i]}</div>`;
     }
-    app.innerHTML = `<div class="card"><div class="p-txt"><span>🧩 Уровень ${state.fwLvl}</span><span>Слов: ${fwWords.filter(w=>w.found).length}/${fwWords.length}</span></div><div style="text-align:center;font-weight:800;font-size:18px;height:24px;color:var(--acc);margin-top:6px;">${curWordStr || 'Проведи пальцем по буквам'}</div><div class="fw-grid" ontouchmove="fwTouchMove(event)" onpointerup="fwEnd()">${gridHtml}</div><div class="fw-words">${tagsHtml}</div><div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-gold" style="margin:0;font-size:13px;" onclick="useHintCoins()">💡 Буква (40 🪙)</button><button class="btn btn-acc" style="margin:0;font-size:13px;" onclick="useHintAd()">🎬 Слово (реклама)</button></div></div>`;
+    app.innerHTML = `<div class="card"><div class="p-txt"><span>🧩 Уровень ${state.fwLvl}</span><span>Слов: ${fwWords.filter(w=>w.found).length}/${fwWords.length}</span></div><div style="text-align:center;font-weight:800;font-size:18px;height:24px;color:var(--acc);margin-top:6px;">${curWordStr || 'Проведи пальцем по буквам'}</div><div class="fw-grid" ontouchmove="fwTouchMove(event)" onpointerup="fwEnd()">${gridHtml}</div><div class="fw-words">${tagsHtml}</div><div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-gold" style="margin:0;font-size:13px;" onclick="useHintLetter()">💡 Буква (30 🪙)</button><button class="btn btn-acc" style="margin:0;font-size:13px;" onclick="useHintWord()">✨ Слово (60 🪙)</button></div></div>`;
   }
-  function claimLvl(coinsAdd, withAd) { const next = () => { state.fwLvl++; state.coins += coinsAdd; save(); initFillword(true); }; if (withAd) sendVK('VKWebAppShowNativeAds', { ad_format: 'reward' }).finally(next); else next(); }
   function fwStart(idx) { if (fwWords.some(w => w.found && w.cells.includes(idx))) return; fwDragging = true; fwSel = [idx]; renderFillword(); }
   function fwMove(idx) { if (!fwDragging || fwWords.some(w => w.found && w.cells.includes(idx))) return; if (fwSel.length >= 2 && fwSel[fwSel.length - 2] === idx) { fwSel.pop(); renderFillword(); return; } if (!fwSel.includes(idx) && isAdjacent(fwSel[fwSel.length - 1], idx)) { fwSel.push(idx); renderFillword(); } }
   function fwTouchMove(e) { if (!fwDragging) return; const t = e.touches, el = document.elementFromPoint(t.clientX, t.clientY); if (el && el.dataset && el.dataset.idx !== undefined) fwMove(Number(el.dataset.idx)); }
   function fwEnd() { if (!fwDragging) return; fwDragging = false; const wordStr = fwSel.map(i => fwGrid[i]).join(''), match = fwWords.find(w => !w.found && w.word === wordStr); if (match) { match.found = true; fwHintCell = -1; } fwSel = []; renderFillword(); }
   window.addEventListener('pointerup', fwEnd);
-  function useHintCoins() { if (state.coins < 40) { alert('Недостаточно монет (нужно 40 🪙)!'); return; } const u = fwWords.find(w => !w.found); if (u) { state.coins -= 40; fwHintCell = u.cells; save(); renderFillword(); } }
-  function useHintAd() { sendVK('VKWebAppShowNativeAds',{ad_format:'reward'}).finally(()=>{ const u=fwWords.find(w=>!w.found); if(u){u.found=true;fwHintCell=-1;renderFillword();} }); }
+  function useHintLetter() { if (state.coins < 30) { alert('Недостаточно монет (нужно 30 🪙)!'); return; } const u = fwWords.find(w => !w.found); if (u) { state.coins -= 30; fwHintCell = u.cells; save(); renderFillword(); } }
+  function useHintWord() { if (state.coins < 60) { alert('Недостаточно монет (нужно 60 🪙)!'); return; } const u = fwWords.find(w => !w.found); if (u) { state.coins -= 60; u.found = true; fwHintCell = -1; save(); renderFillword(); } }
   function renderBlitzHome() {
     clearInterval(bTimer);
     const rivals = [{name:"Максим Волков",pts:380},{name:"Алина Смирнова",pts:240},{name:"Дмитрий Орлов",pts:150},{name:"Елена Соколова",pts:90},{name:"Артём Морозов",pts:40},{name:getName()+" (Ты)",pts:state.bestBlitz,me:true}].sort((a,b)=>b.pts-a.pts);
@@ -196,7 +201,7 @@ sendVK('VKWebAppInit');
     clearInterval(bTimer);
     if (bLives <= 0) {
       const isNew = bScore > state.bestBlitz; if (isNew) { state.bestBlitz = bScore; save(); }
-      app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:48px;">💥</div><h2>${isNew?'🎉 Новый рекорд!':'Жизни закончились!'}</h2><p>Очки: <b>${bScore}</b> (Лучший: ${state.bestBlitz})</p><button class="btn btn-acc" onclick="sendVK('VKWebAppShowNativeAds',{ad_format:'reward'}).finally(()=>{bLives=2;nextBlitzQ();})">🎬 +2 жизни за рекламу</button><button class="btn btn-story" onclick="story('Турбо-Блиц','🏆','Рекорд: ${state.bestBlitz} очк.!')">📸 В Историю ${state.storyDate===today?'':'(+100 🪙)'}</button><button class="btn btn-sec" onclick="renderBlitzHome()">К рейтингу</button></div>`;
+      app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:48px;">💥</div><h2>${isNew?'🎉 Новый рекорд!':'Жизни закончились!'}</h2><p>Очки: <b>${bScore}</b> (Лучший: ${state.bestBlitz})</p><button class="btn btn-story" onclick="story('Турбо-Блиц','🏆','Рекорд: ${state.bestBlitz} очк.!')">📸 В Историю ${state.storyDate===today?'':'(+100 🪙)'}</button><button class="btn btn-acc" onclick="startBlitz()">Сыграть ещё (-1 ⚡)</button><button class="btn btn-sec" onclick="renderBlitzHome()">К рейтингу</button></div>`;
       return;
     }
     curBlitzObj = genBlitzRound(); bTimeLeft = 12;
@@ -208,9 +213,9 @@ sendVK('VKWebAppInit');
 
   function renderOracle() {
     const s = state.oSeed, txt = `${oPart1[s % oPart1.length]} ${oPart2[(s * 3) % oPart2.length]} ${oPart3[(s * 7) % oPart3.length]}`;
-    app.innerHTML = `<div class="card"><h2>🔮 Оракул судьбы</h2><p style="font-size:16px;color:var(--text);font-weight:500;">«${txt}»</p>${state.daily===today?'<button class="btn btn-sec" disabled>✅ Бонус получен</button>':'<button class="btn btn-gold" onclick="state.daily=today;state.coins+=25;save();renderOracle()">Забрать +25 🪙</button>'}<button class="btn btn-acc" onclick="sendVK('VKWebAppShowNativeAds',{ad_format:'reward'}).finally(()=>{state.oSeed=Math.floor(Math.random()*9999);save();renderOracle();})">🎬 Новая карта (за рекламу)</button></div><div class="card"><h2>🎰 Колесо Фортуны</h2><button class="btn btn-gold" onclick="spinWheel()">🎬 Крутить за рекламу</button><div id="wRes" style="margin-top:10px;text-align:center;font-weight:700;"></div></div><div class="card"><h2>💘 Совместимость</h2><input class="input-box" id="n1" value="${getName()}"><input class="input-box" id="n2" placeholder="Имя друга или пары"><button class="btn btn-acc" onclick="love()">Проверить</button><div id="lRes" style="margin-top:10px;"></div></div>`;
+    app.innerHTML = `<div class="card"><h2>🔮 Оракул судьбы</h2><p style="font-size:16px;color:var(--text);font-weight:500;">«${txt}»</p>${state.daily===today?'<button class="btn btn-sec" disabled>✅ Бонус за сегодня получен</button>':'<button class="btn btn-gold" onclick="state.daily=today;state.coins+=30;save();renderOracle()">Забрать ежедневный бонус +30 🪙</button>'}<button class="btn btn-acc" onclick="state.oSeed=Math.floor(Math.random()*9999);save();renderOracle()">🔄 Новое предсказание</button></div><div class="card"><h2>🎰 Колесо Фортуны</h2>${state.wheelDate===today?'<button class="btn btn-sec" disabled>✅ Попытка на сегодня использована</button>':'<button class="btn btn-gold" onclick="spinWheel()">🎁 Крутить бесплатно (1 раз в день)</button>'}<div id="wRes" style="margin-top:10px;text-align:center;font-weight:700;"></div></div><div class="card"><h2>💘 Совместимость</h2><input class="input-box" id="n1" value="${getName()}"><input class="input-box" id="n2" placeholder="Имя друга или пары"><button class="btn btn-acc" onclick="love()">Проверить</button><div id="lRes" style="margin-top:10px;"></div></div>`;
   }
-  function spinWheel() { sendVK('VKWebAppShowNativeAds',{ad_format:'reward'}).finally(()=>{ const pr=[{t:'+35 🪙!',f:()=>state.coins+=35},{t:'+80 🪙 Джекпот!',f:()=>state.coins+=80},{t:'+2 ⚡ Энергии!',f:()=>state.energy=Math.min(maxE(),state.energy+2)}]; const w=pr[Math.floor(Math.random()*pr.length)]; w.f(); save(); document.getElementById('wRes').innerText='Выигрыш: '+w.t; }); }
+  function spinWheel() { state.wheelDate = today; const pr=[{t:'+40 🪙!',f:()=>state.coins+=40},{t:'+80 🪙 Джекпот!',f:()=>state.coins+=80},{t:'+2 ⚡ Энергии!',f:()=>state.energy=Math.min(maxE(),state.energy+2)}]; const w=pr[Math.floor(Math.random()*pr.length)]; w.f(); save(); renderOracle(); document.getElementById('wRes').innerText='Выигрыш: '+w.t; }
   function love() { const a=document.getElementById('n1').value.trim(), b=document.getElementById('n2').value.trim(); if(!a||!b)return; const pct=55+((a+b).split('').reduce((s,c)=>s+c.charCodeAt(0),0)%45); document.getElementById('lRes').innerHTML=`<div style="text-align:center;padding:10px;background:var(--btn);border-radius:12px;"><div style="font-size:26px;font-weight:800;color:var(--acc);">${pct}% ❤️</div><button class="btn btn-story" onclick="story('Совместимость','❤️','${a}+${b}=${pct}%')">📸 В Историю</button></div>`; }
   function renderProfile() {
     if (!state.owned) state.owned = [];
@@ -222,17 +227,18 @@ sendVK('VKWebAppInit');
       if (eq) b = `<span style="color:var(--grn);font-weight:700;font-size:13px;">✅ Надето</span>`; else if (bought) b = `<button class="btn btn-sec" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="equipItem('${it.type}','${it.val}')">Выбрать</button>`;
       return `<div class="lb-row"><span>${it.name}</span>${b}</div>`;
     }).join('');
-    app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:52px;cursor:pointer;" onclick="adminTap()">${ava}</div><h2 style="margin:6px 0;">${getName()}</h2><div style="color:var(--acc);font-weight:700;">${rk}</div><div style="display:flex;justify-content:space-around;margin-top:16px;padding-top:12px;border-top:1px solid var(--btn);"><div><b>Ур. ${state.fwLvl}</b><div style="font-size:12px;color:var(--sub);">Филворды</div></div><div><b style="color:var(--gold);">${state.coins}</b><div style="font-size:12px;color:var(--sub);">Монет</div></div><div><b style="color:var(--acc);">${state.bestBlitz}</b><div style="font-size:12px;color:var(--sub);">Рекорд Блиц</div></div></div></div><div class="card"><h3 style="margin-top:0;">✏️ Сменить никнейм</h3><input class="input-box" id="nickInp" maxlength="16" placeholder="Новый ник (2–16 символов)" style="margin-top:0;"><button class="btn btn-acc" onclick="changeNick()">Установить ник (100 🪙)</button></div><div class="card"><h3 style="margin-top:0;">💎 Банк (за Голоса ВК)</h3><div class="lb-row"><span>🪙 300 монет</span><button class="btn btn-grn" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="buyVotes('coins_300',300,false)">3 голоса</button></div><div class="lb-row"><span>🪙 1000 монет (Хит!)</span><button class="btn btn-grn" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="buyVotes('coins_1000',1000,false)">8 голосов</button></div><div class="lb-row"><span>⚡ Полная энергия</span><button class="btn btn-grn" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="buyVotes('energy_full',0,true)">2 голоса</button></div></div><div class="card"><h3 style="margin-top:0;">🛒 Магазин и улучшения</h3><div class="lb-row"><span>⚡ Макс. энергия (${maxE()} → ${maxE()+1})</span><button class="btn btn-acc" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="upgradeEnergy()">200 🪙</button></div>${shopHtml}</div>`;
+    app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:52px;cursor:pointer;" onclick="adminTap()">${ava}</div><h2 style="margin:6px 0;">${getName()}</h2><div style="color:var(--acc);font-weight:700;">${rk}</div><div style="display:flex;justify-content:space-around;margin-top:16px;padding-top:12px;border-top:1px solid var(--btn);"><div><b>Ур. ${state.fwLvl}</b><div style="font-size:12px;color:var(--sub);">Филворды</div></div><div><b style="color:var(--gold);">${state.coins}</b><div style="font-size:12px;color:var(--sub);">Монет</div></div><div><b style="color:var(--acc);">${state.bestBlitz}</b><div style="font-size:12px;color:var(--sub);">Рекорд Блиц</div></div></div><button class="btn btn-grn" onclick="inviteFriend(false)">👥 Позвать друзей (+50 🪙)</button></div><div class="card"><h3 style="margin-top:0;">✏️ Сменить никнейм</h3><input class="input-box" id="nickInp" maxlength="16" placeholder="Новый ник (2–16 символов)" style="margin-top:0;"><button class="btn btn-acc" onclick="changeNick()">Установить ник (100 🪙)</button></div><div class="card"><h3 style="margin-top:0;">🛒 Магазин и улучшения</h3><div class="lb-row"><span>⚡ Макс. энергия (${maxE()} → ${maxE()+1})</span><button class="btn btn-acc" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="upgradeEnergy()">200 🪙</button></div>${shopHtml}</div>`;
   }
   function changeNick() { const v = document.getElementById('nickInp').value.trim(); if (v.length < 2) { alert('От 2 до 16 символов!'); return; } if (state.coins < 100) { alert('Нужно 100 🪙!'); return; } state.coins -= 100; state.customNick = v; save(); renderProfile(); }
   function buyItem(id, price, type, val) { if (state.coins < price) { alert('Недостаточно монет!'); return; } state.coins -= price; state.owned.push(id); equipItem(type, val); }
   function equipItem(type, val) { if (type === 'theme') { state.activeTheme = val; applyCosmetics(); } if (type === 'ava') state.activeAva = val; save(); renderProfile(); }
   function upgradeEnergy() { if (state.coins < 200) { alert('Нужно 200 🪙!'); return; } state.coins -= 200; state.maxE = maxE() + 1; state.energy = maxE(); save(); renderProfile(); }
+
   const ADMIN_PIN = "7777";
   let admTaps = 0;
   function adminTap() { admTaps++; if (admTaps >= 5) { admTaps = 0; if (prompt("Введите ПИН-код админа:") === ADMIN_PIN) openAdmin(); } }
   function openAdmin() {
-    app.innerHTML = `<div class="card" style="border:2px solid var(--red);"><h2 style="color:var(--red);">🛠 Админ-панель</h2><p>Ваш VK ID: <b>${user.id || 'Локальный тест'}</b></p><button class="btn btn-gold" onclick="state.coins+=1000;save();openAdmin()">+1000 🪙 Монет</button><button class="btn btn-acc" onclick="state.energy=maxE();save();openAdmin()">⚡ Восстановить энергию</button><button class="btn btn-grn" onclick="state.fwLvl++;save();fwWords=[];alert('Уровень: '+state.fwLvl);openAdmin()">🧩 +1 уровень (сейчас ${state.fwLvl})</button><button class="btn btn-acc" onclick="state.owned=['t_cyber','t_gold','a_dragon','a_alien','a_crown'];save();alert('Весь магазин открыт!')">🛒 Открыть весь магазин</button><button class="btn btn-red" onclick="if(confirm('Сбросить прогресс?')){localStorage.removeItem('vk_fw_v8');location.reload();}">🗑 Сбросить прогресс</button><button class="btn btn-sec" onclick="renderProfile()">← Выйти</button></div>`;
+    app.innerHTML = `<div class="card" style="border:2px solid var(--red);"><h2 style="color:var(--red);">🛠 Админ-панель</h2><button class="btn btn-gold" onclick="state.coins+=1000;save();openAdmin()">+1000 🪙 Монет</button><button class="btn btn-acc" onclick="state.energy=maxE();save();openAdmin()">⚡ Восстановить энергию</button><button class="btn btn-grn" onclick="state.fwLvl++;save();fwWords=[];alert('Уровень: '+state.fwLvl);openAdmin()">🧩 +1 уровень (сейчас ${state.fwLvl})</button><button class="btn btn-acc" onclick="state.owned=['t_cyber','t_gold','a_dragon','a_alien','a_crown'];save();alert('Весь магазин открыт!')">🛒 Открыть весь магазин</button><button class="btn btn-red" onclick="if(confirm('Сбросить прогресс?')){localStorage.removeItem('vk_fw_clean');location.reload();}">🗑 Сбросить прогресс</button><button class="btn btn-sec" onclick="renderProfile()">← Выйти</button></div>`;
   }
 
   function story(tt, em, rt) {
