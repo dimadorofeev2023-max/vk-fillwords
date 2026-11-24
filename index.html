@@ -1,47 +1,47 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Филворды, Блиц и Оракул</title>
-  <style>
-    :root { --bg:#ebedf0; --card:#fff; --text:#000; --sub:#6d7885; --btn:#f2f3f5; --acc:#2688eb; --grn:#4bb34b; --gold:#ffa000; --red:#ff3347; }
-    body.dark { --bg:#0a0a0a; --card:#19191a; --text:#e1e3e6; --sub:#76787a; --btn:#2c2d2e; --acc:#529ef4; }
-    body.theme-cyber { --bg:#120428; --card:#1f0944; --text:#f3e5f5; --sub:#b388ff; --btn:#311068; --acc:#ff007f; }
-    body.theme-gold { --bg:#14120c; --card:#221e14; --text:#fff8e1; --sub:#bcaaa4; --btn:#332c1d; --acc:#ffb300; }
-    * { box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Roboto',sans-serif; user-select:none; -webkit-user-select:none; }
-    body { margin:0; padding:12px 12px 80px 12px; background:var(--bg); color:var(--text); display:flex; justify-content:center; min-height:100vh; }
-    .container { width:100%; max-width:420px; }
-    .top-bar { display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:12px; }
-    .pill { background:var(--card); padding:6px 10px; border-radius:20px; font-weight:700; font-size:13px; box-shadow:0 2px 6px rgba(0,0,0,0.06); cursor:pointer; }
-    .card { background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
-    h2 { margin-top:0; font-size:20px; }
-    p { color:var(--sub); font-size:14px; line-height:1.4; }
-    .btn { display:block; width:100%; padding:13px; margin-top:10px; border:none; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; text-align:center; }
-    .btn-opt { background:var(--btn); color:var(--acc); text-align:left; }
-    .btn-acc { background:var(--acc); color:#fff; }
-    .btn-sec { background:var(--btn); color:var(--sub); font-size:14px; padding:10px; }
-    .btn-grn { background:var(--grn); color:#fff; }
-    .btn-gold { background:var(--gold); color:#fff; }
-    .btn-red { background:var(--red); color:#fff; }
-    .btn-story { background:linear-gradient(45deg,#ff3347,#ff7b00); color:#fff; }
-    .input-box { width:100%; padding:12px; border-radius:12px; border:none; background:var(--btn); color:var(--text); font-size:15px; margin-top:8px; user-select:text; }
-    .fw-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin:12px 0; touch-action:none; }
-    .fw-cell { aspect-ratio:1/1; background:var(--btn); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:22px; font-weight:800; color:var(--text); cursor:pointer; }
-    .fw-cell.sel { background:var(--acc); color:#fff; transform:scale(0.94); }
-    .fw-cell.hint { border:2px dashed var(--gold); color:var(--gold); }
-    .fw-words { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:8px; }
-    .fw-tag { background:var(--btn); padding:5px 10px; border-radius:8px; font-size:13px; font-weight:700; color:var(--sub); }
-    .fw-tag.done { background:var(--grn); color:#fff; text-decoration:line-through; }
-    .p-bar { width:100%; height:6px; background:var(--btn); border-radius:3px; margin:10px 0 14px 0; overflow:hidden; }
-    .p-fill { height:100%; background:var(--acc); transition:width 0.25s linear; }
-    .p-txt { font-size:13px; color:var(--sub); display:flex; justify-content:space-between; }
-    .lb-row { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:12px; background:var(--btn); margin-bottom:8px; font-size:14px; }
-    .lb-me { border:2px solid var(--acc); background:rgba(38,136,235,0.12); font-weight:700; }
-    .nav { position:fixed; bottom:0; left:0; right:0; background:var(--card); display:flex; justify-content:space-around; padding:8px 0 12px 0; box-shadow:0 -2px 10px rgba(0,0,0,0.08); z-index:10; }
-    .nav-item { background:none; border:none; color:var(--sub); font-size:11px; font-weight:600; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; }
-    .nav-item.active { color:var(--acc); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Филворды и Блиц</title>
+<style>
+:root { --bg:#ebedf0; --card:#fff; --text:#000; --sub:#6d7885; --btn:#f2f3f5; --acc:#2688eb; --grn:#4bb34b; --gold:#ffa000; --red:#ff3347; }
+body.dark { --bg:#0a0a0a; --card:#19191a; --text:#e1e3e6; --sub:#76787a; --btn:#2c2d2e; --acc:#529ef4; }
+body.theme-cyber { --bg:#120428; --card:#1f0944; --text:#f3e5f5; --sub:#b388ff; --btn:#311068; --acc:#ff007f; }
+body.theme-gold { --bg:#14120c; --card:#221e14; --text:#fff8e1; --sub:#bcaaa4; --btn:#332c1d; --acc:#ffb300; }
+* { box-sizing:border-box; font-family:sans-serif; user-select:none; -webkit-user-select:none; }
+body { margin:0; padding:12px 12px 80px 12px; background:var(--bg); color:var(--text); display:flex; justify-content:center; }
+.container { width:100%; max-width:420px; }
+.top-bar { display:flex; justify-content:space-between; gap:6px; margin-bottom:12px; }
+.pill { background:var(--card); padding:6px 10px; border-radius:20px; font-weight:700; font-size:13px; cursor:pointer; }
+.card { background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; }
+h2 { margin-top:0; font-size:20px; }
+p { color:var(--sub); font-size:14px; }
+.btn { display:block; width:100%; padding:13px; margin-top:10px; border:none; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; }
+.btn-opt { background:var(--btn); color:var(--acc); text-align:left; }
+.btn-acc { background:var(--acc); color:#fff; }
+.btn-sec { background:var(--btn); color:var(--sub); font-size:14px; padding:10px; }
+.btn-grn { background:var(--grn); color:#fff; }
+.btn-gold { background:var(--gold); color:#fff; }
+.btn-red { background:var(--red); color:#fff; }
+.btn-story { background:linear-gradient(45deg,#ff3347,#ff7b00); color:#fff; }
+.input-box { width:100%; padding:12px; border-radius:12px; border:none; background:var(--btn); color:var(--text); font-size:15px; margin-top:8px; user-select:text; }
+.fw-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin:12px 0; touch-action:none; }
+.fw-cell { aspect-ratio:1/1; background:var(--btn); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:22px; font-weight:800; cursor:pointer; }
+.fw-cell.sel { background:var(--acc); color:#fff; }
+.fw-cell.hint { border:2px dashed var(--gold); color:var(--gold); }
+.fw-words { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:8px; }
+.fw-tag { background:var(--btn); padding:5px 10px; border-radius:8px; font-size:13px; font-weight:700; color:var(--sub); }
+.fw-tag.done { background:var(--grn); color:#fff; text-decoration:line-through; }
+.p-bar { width:100%; height:6px; background:var(--btn); border-radius:3px; margin:10px 0; overflow:hidden; }
+.p-fill { height:100%; background:var(--acc); }
+.p-txt { font-size:13px; color:var(--sub); display:flex; justify-content:space-between; }
+.lb-row { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:12px; background:var(--btn); margin-bottom:8px; font-size:14px; }
+.lb-me { border:2px solid var(--acc); font-weight:700; }
+.nav { position:fixed; bottom:0; left:0; right:0; background:var(--card); display:flex; justify-content:space-around; padding:8px 0 12px 0; z-index:10; }
+.nav-item { background:none; border:none; color:var(--sub); font-size:11px; font-weight:600; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; }
+.nav-item.active { color:var(--acc); }
+</style>
 </head>
 <body>
 <div class="container">
@@ -50,245 +50,352 @@
     <div class="pill" style="color:var(--acc);" id="energyBox" onclick="openEnergyModal()">⚡ 5/5</div>
     <div class="pill" style="color:var(--gold);" id="coinBox">🪙 60</div>
   </div>
-  <div id="app">Загрузка...</div>
+  <div id="app"></div>
 </div>
 <div class="nav">
-  <button class="nav-item active" onclick="switchTab('fw',this)"><span style="font-size:20px;">🧩</span>Филворды</button>
-  <button class="nav-item" onclick="switchTab('blitz',this)"><span style="font-size:20px;">⚡</span>Блиц</button>
-  <button class="nav-item" onclick="switchTab('oracle',this)"><span style="font-size:20px;">🔮</span>Оракул</button>
-  <button class="nav-item" onclick="switchTab('profile',this)"><span style="font-size:20px;">👤</span>Профиль</button>
+  <button class="nav-item active" onclick="switchTab('fw',this)"><span>🧩</span>Филворды</button>
+  <button class="nav-item" onclick="switchTab('blitz',this)"><span>⚡</span>Блиц</button>
+  <button class="nav-item" onclick="switchTab('oracle',this)"><span>🔮</span>Оракул</button>
+  <button class="nav-item" onclick="switchTab('profile',this)"><span>👤</span>Профиль</button>
 </div>
 <canvas id="storyCanvas" width="1080" height="1920" style="display:none;"></canvas>
 <script>
-  const APP_LINK = 'https://vk.com';
-  const SB_URL = "https://supabase.co";
-  const SB_KEY = "sb_publishable_gEEOzgYJs17G79IIY47qmA_rBmv2M2y";
-  const REGEN_MS = 10 * 60 * 1000;
+const APP_LINK = 'https://vk.com';
+const SB_URL = 'https://supabase.co';
+const SB_KEY = 'sb_publishable_gEEOzgYJs17G79IIY47qmA_rBmv2M2y';
+const REGEN_MS = 600000;
 
-  const wordBank = {
-    4: ["КОФЕ","МОРЕ","ЛУНА","СНЕГ","ЗВУК","РИТМ","ИГРА","СВЕТ","КЛЮЧ","ПЛАН","МОСТ","ПАРК","ЗНАК","ВКУС","УЮТ","ГРОМ","ШАНС","КЛАД","МАЯК","НЕБО"],
-    5: ["ОКЕАН","ВЕТЕР","ГОРОД","КНИГА","МЕЧТА","ЗЕМЛЯ","ОГОНЬ","ВРЕМЯ","СЛОВО","ТАЙНА","УСПЕХ","АЛМАЗ","БЕРЕГ","ГОЛОС","ДОЖДЬ","ЗАМОК","ИСКРА","ЛИДЕР","ПОЛЕТ","СЕВЕР"],
-    6: ["КОСМОС","ПОБЕДА","РАКЕТА","СОЛНЦЕ","ЗВЕЗДА","ОСТРОВ","СЕКРЕТ","ПРИВЕТ","ДРУЖБА","УЛЫБКА","ЗОЛОТО","РАДУГА","ЯБЛОКО","МОЛНИЯ","ВОСТОК","ГИТАРА"]
-  };
-  const pathStrings = [
-    "0,1,2,3,4,9,8,7,6,5,10,11,12,13,14,19,18,17,16,15,20,21,22,23,24",
-    "0,5,10,15,20,21,16,11,6,1,2,7,12,17,22,23,18,13,8,3,4,9,14,19,24",
-    "4,3,2,1,0,5,6,7,8,9,14,13,12,11,10,15,16,17,18,19,24,23,22,21,20",
-    "20,15,10,5,0,1,6,11,16,21,22,17,12,7,2,3,8,13,18,23,24,19,14,9,4"
-  ];
-  const layoutStrings = ["5,5,5,5,5", "6,5,5,5,4", "4,5,6,5,5", "6,6,5,4,4"];
-  const wordColors = ['#2688eb','#4bb34b','#ff7b00','#9c27b0','#e91e63','#009688'];
+const wordBank = {
+  4: ["КОФЕ","МОРЕ","ЛУНА","СНЕГ","ЗВУК","РИТМ","ИГРА","СВЕТ","КЛЮЧ","ПЛАН","МОСТ","ПАРК","ЗНАК","ВКУС","УЮТ","ГРОМ"],
+  5: ["ОКЕАН","ВЕТЕР","ГОРОД","КНИГА","МЕЧТА","ЗЕМЛЯ","ОГОНЬ","ВРЕМЯ","СЛОВО","ТАЙНА","УСПЕХ","АЛМАЗ","БЕРЕГ","ГОЛОС"],
+  6: ["КОСМОС","ПОБЕДА","РАКЕТА","СОЛНЦЕ","ЗВЕЗДА","ОСТРОВ","СЕКРЕТ","ПРИВЕТ","ДРУЖБА","УЛЫБКА","ЗОЛОТО","РАДУГА"]
+};
+const pathStrings = [
+  "0,1,2,3,4,9,8,7,6,5,10,11,12,13,14,19,18,17,16,15,20,21,22,23,24",
+  "0,5,10,15,20,21,16,11,6,1,2,7,12,17,22,23,18,13,8,3,4,9,14,19,24"
+];
+const layoutStrings = ["5,5,5,5,5", "6,5,5,5,4", "4,5,6,5,5"];
+const wordColors = ['#2688eb','#4bb34b','#ff7b00','#9c27b0','#e91e63'];
 
-  const tfPool = [
-    { q:"У осьминога три сердца?", a:true }, { q:"Золотая рыбка помнит всё 3 секунды?", a:false },
-    { q:"Банан — это ягода?", a:true }, { q:"Венера — самая горячая планета?", a:true },
-    { q:"Страусы прячут голову в песок?", a:false }, { q:"Мёд не портится тысячелетиями?", a:true }
-  ];
-  const quizPool = [
-    { q:"Самая большая планета Солнечной системы?", opts:["Юпитер","Сатурн","Нептун","Марс"], ans:"Юпитер" },
-    { q:"Сколько клавиш у классического пианино?", opts:["88","64","76","92"], ans:"88" },
-    { q:"Какой элемент обозначается буквой K?", opts:["Калий","Кальций","Кремний","Криптон"], ans:"Калий" },
-    { q:"Самый твёрдый природный минерал?", opts:["Алмаз","Кварц","Рубин","Топаз"], ans:"Алмаз" }
-  ];
-  const oPart1 = ["Уже сегодня вечером", "В ближайшие 48 часов", "До конца этой недели", "Совсем скоро", "Неожиданно для тебя"];
-  const oPart2 = ["тебя ждёт приятный финансовый сюрприз", "появится шанс круто изменить планы к лучшему", "старый знакомый принесёт отличную новость", "твоя смелая идея получит поддержку", "удача сама постучится в дверь"];
-  const oPart3 = ["— главное, не бойся действовать первым!", "— прислушайся к своей интуиции.", "— скажи «да» новым возможностям!", "— просто сохраняй спокойствие и улыбайся."];
+const tfPool = [
+  { q:"У осьминога три сердца?", a:true },
+  { q:"Золотая рыбка помнит всё 3 секунды?", a:false },
+  { q:"Банан — это ягода?", a:true },
+  { q:"Венера — самая горячая планета?", a:true }
+];
+const quizPool = [
+  { q:"Самая большая планета Солнечной системы?", opts:["Юпитер","Сатурн","Нептун","Марс"], ans:"Юпитер" },
+  { q:"Сколько клавиш у классического пианино?", opts:["88","64","76","92"], ans:"88" },
+  { q:"Самый твёрдый природный минерал?", opts:["Алмаз","Кварц","Рубин","Топаз"], ans:"Алмаз" }
+];
+const oPart1 = ["Уже сегодня вечером", "В ближайшие 48 часов", "До конца этой недели", "Совсем скоро"];
+const oPart2 = ["тебя ждёт приятный сюрприз", "появится шанс изменить планы к лучшему", "старый знакомый принесёт новость"];
+const oPart3 = ["— не бойся действовать первым!", "— прислушайся к интуиции.", "— скажи «да» новым возможностям!"];
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const launchVkId = Number(urlParams.get('vk_user_id')) || 0;
-  let user = { id: launchVkId, first_name: 'Игрок', last_name: '' };
-  let realLeaders = [];
-  let state = JSON.parse(localStorage.getItem('vk_fw_live') || 'null') || {
-    coins: 60, energy: 5, maxE: 5, lastEnergyTs: Date.now(), fwLvl: 1, streak: 1, last: '', daily: '', storyDate: '', wheelDate: '', bestBlitz: 0, oSeed: 1, owned: [], activeTheme: '', activeAva: '😎', customNick: ''
-  };
-  let curTab = 'fw', fwGrid = [], fwWords = [], fwSel = [], fwDragging = false, fwHintCell = -1;
-  let bScore = 0, bLives = 3, bCombo = 1, bTimer = null, bTimeLeft = 12, curBlitzObj = null;
-  const app = document.getElementById('app'), today = new Date().toDateString();
+const urlParams = new URLSearchParams(window.location.search);
+const launchVkId = Number(urlParams.get('vk_user_id')) || 0;
+let user = { id: launchVkId, first_name: 'Игрок', last_name: '' };
+let realLeaders = [];
+let state = JSON.parse(localStorage.getItem('vk_fw_ok') || 'null') || {
+  coins: 60, energy: 5, maxE: 5, lastEnergyTs: Date.now(), fwLvl: 1,
+  streak: 1, last: '', daily: '', storyDate: '', wheelDate: '',
+  bestBlitz: 0, oSeed: 1, owned: [], activeTheme: '', activeAva: '😎', customNick: ''
+};
+let curTab = 'fw', fwGrid = [], fwWords = [], fwSel = [], fwDragging = false, fwHintCell = -1;
+let bScore = 0, bLives = 3, bCombo = 1, bTimer = null, bTimeLeft = 12, curBlitzObj = null;
+const app = document.getElementById('app'), today = new Date().toDateString();
+function maxE() { return state.maxE || 5; }
+function getName() {
+  if (state.customNick) return state.customNick;
+  if (user.last_name) return user.first_name + ' ' + user.last_name;
+  return user.id ? ('Игрок #' + String(user.id).slice(-4)) : user.first_name;
+}
+function applyCosmetics() {
+  document.body.classList.remove('theme-cyber', 'theme-gold');
+  if (state.activeTheme) document.body.classList.add(state.activeTheme);
+}
+applyCosmetics();
 
-  function maxE() { return state.maxE || 5; }
-  function getName() { return state.customNick || (user.first_name + (user.last_name ? ' ' + user.last_name : (user.id ? ' #' + String(user.id).slice(-4) : ''))); }
-  function applyCosmetics() { document.body.classList.remove('theme-cyber', 'theme-gold'); if (state.activeTheme) document.body.classList.add(state.activeTheme); }
-  applyCosmetics();
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+function syncEnergy() {
+  const m = maxE();
+  if (state.energy < m) {
+    const p = Math.floor((Date.now() - state.lastEnergyTs) / REGEN_MS);
+    if (p > 0) {
+      state.energy = Math.min(m, state.energy + p);
+      state.lastEnergyTs = state.energy === m ? Date.now() : state.lastEnergyTs + p * REGEN_MS;
+    }
+  } else state.lastEnergyTs = Date.now();
+}
+function save() {
+  syncEnergy();
+  localStorage.setItem('vk_fw_ok', JSON.stringify(state));
+  document.getElementById('coinBox').innerText = '🪙 ' + state.coins;
+  document.getElementById('streakBox').innerText = '🔥 ' + state.streak + ' дн.';
+  document.getElementById('energyBox').innerText = `⚡ ${state.energy}/${maxE()}`;
+}
+if (state.last !== today) {
+  state.streak = (state.last === new Date(Date.now() - 86400000).toDateString()) ? state.streak + 1 : 1;
+  state.last = today;
+  state.oSeed = Math.floor(Math.random() * 999);
+}
+save();
+setInterval(save, 15000);
 
-  function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
-  function syncEnergy() {
-    const m = maxE();
-    if (state.energy < m) {
-      const p = Math.floor((Date.now() - state.lastEnergyTs) / REGEN_MS);
-      if (p > 0) { state.energy = Math.min(m, state.energy + p); state.lastEnergyTs = state.energy === m ? Date.now() : state.lastEnergyTs + p * REGEN_MS; }
-    } else state.lastEnergyTs = Date.now();
-  }
-  function save() {
-    syncEnergy(); localStorage.setItem('vk_fw_live', JSON.stringify(state));
-    document.getElementById('coinBox').innerText = '🪙 ' + state.coins;
-    document.getElementById('streakBox').innerText = '🔥 ' + state.streak + ' дн.';
-    document.getElementById('energyBox').innerText = `⚡ ${state.energy}/${maxE()}`;
-  }
-  if (state.last !== today) { state.streak = (state.last === new Date(Date.now() - 86400000).toDateString()) ? state.streak + 1 : 1; state.last = today; state.oSeed = Math.floor(Math.random() * 999); }
-  save(); setInterval(save, 15000);
+function sendVK(m, p = {}) {
+  const s = JSON.stringify(p);
+  try { window.parent.postMessage({ handler: m, params: p, type: 'vk-connect' }, '*'); } catch (e) {}
+  try { if (window.AndroidBridge && window.AndroidBridge[m]) window.AndroidBridge[m](s); } catch (e) {}
+  try { if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers[m]) window.webkit.messageHandlers[m].postMessage(p); } catch (e) {}
+}
+window.addEventListener('message', e => {
+  const d = e.data && (e.data.data || e.data);
+  if (d && d.first_name) { user = Object.assign(user, d); saveScoreToCloud().then(loadRealLeaders); render(); }
+  if (d && d.scheme && d.scheme.includes('dark')) document.body.classList.add('dark');
+});
+sendVK('VKWebAppInit');
+sendVK('VKWebAppGetUserInfo', { request_id: 'u1' });
 
-  function sendVK(m, p = {}) {
-    const str = JSON.stringify(p);
-    try { window.parent.postMessage({ handler: m, params: p, type: 'vk-connect' }, '*'); } catch (e) {}
-    try { if (window.AndroidBridge && window.AndroidBridge[m]) window.AndroidBridge[m](str); } catch (e) {}
-    try { if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers[m]) window.webkit.messageHandlers[m].postMessage(p); } catch (e) {}
-  }
-  window.addEventListener('message', e => {
-    const d = e.data && (e.data.data || e.data);
-    if (d && d.first_name) { user = Object.assign(user, d); saveScoreToCloud().then(loadRealLeaders); render(); }
-    if (d && d.scheme && d.scheme.includes('dark')) document.body.classList.add('dark');
-  });
-  sendVK('VKWebAppInit');
-  sendVK('VKWebAppGetUserInfo', { request_id: 'u1' });
-
-  function getHeaders(extra = {}) {
-    const h = { 'apikey': SB_KEY, 'Content-Type': 'application/json' };
-    if (SB_KEY.startsWith('eyJ')) h['Authorization'] = 'Bearer ' + SB_KEY;
-    return Object.assign(h, extra);
-  }
-  async function saveScoreToCloud() {
-    if (!SB_KEY || SB_KEY.includes("ВСТАВЬ")) return;
-    const uid = String(user.id || launchVkId || ('guest_' + Math.floor(Math.random() * 100000)));
-    try {
-      await fetch(`${SB_URL}/rest/v1/players?on_conflict=id`, {
-        method: 'POST', headers: getHeaders({ 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
-        body: JSON.stringify({ id: uid, name: getName(), coins: state.coins, lvl: state.fwLvl, blitz: state.bestBlitz })
-      });
-    } catch (e) {}
-  }
-  async function loadRealLeaders() {
-    if (!SB_KEY || SB_KEY.includes("ВСТАВЬ")) return;
-    try {
-      const res = await fetch(`${SB_URL}/rest/v1/players?select=id,name,blitz&order=blitz.desc&limit=10`, { headers: getHeaders() });
-      if (res.ok) { realLeaders = await res.json(); if (curTab === 'blitz') renderBlitzHome(); }
-    } catch (e) {}
-  }
-  setTimeout(() => { saveScoreToCloud(); loadRealLeaders(); }, 1000);
-  function inviteFriend(bonusEnergy) {
-    sendVK('VKWebAppShare', { link: APP_LINK });
-    if (bonusEnergy) { state.energy = Math.min(maxE(), state.energy + 2); save(); render(); }
-    else { state.coins += 50; save(); render(); }
-  }
-  function spendEnergy() { syncEnergy(); if (state.energy <= 0) { openEnergyModal(); return false; } if (state.energy === maxE()) state.lastEnergyTs = Date.now(); state.energy--; save(); return true; }
-  function openEnergyModal() {
-    clearInterval(bTimer);
-    const m = Math.max(1, Math.ceil((REGEN_MS - (Date.now() - state.lastEnergyTs)) / 60000));
-    app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:48px;">⚡</div><h2>Энергия закончилась</h2><p>+1 ⚡ восстановится через <b>${m} мин.</b>, или пополни сейчас:</p><button class="btn btn-acc" onclick="inviteFriend(true)">👥 Позвать друга (+2 ⚡)</button><button class="btn btn-gold" onclick="if(state.coins>=80){state.coins-=80;state.energy=maxE();save();render();}else alert('Нужно 80 🪙!')">Полный заряд за 80 🪙</button><button class="btn btn-sec" onclick="render()">← Назад</button></div>`;
-  }
-  function switchTab(t, el) { clearInterval(bTimer); curTab = t; document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active')); el.classList.add('active'); if (t === 'blitz') loadRealLeaders(); render(); }
-  function render() { clearInterval(bTimer); if (curTab === 'fw') { if (!fwWords.length) initFillword(false); else renderFillword(); } else if (curTab === 'blitz') renderBlitzHome(); else if (curTab === 'oracle') renderOracle(); else renderProfile(); }
-
-  function initFillword(costEnergy) {
-    if (costEnergy && !spendEnergy()) return;
-    const lens = layoutStrings[Math.floor(Math.random() * layoutStrings.length)].split(',').map(Number);
-    const path = pathStrings[Math.floor(Math.random() * pathStrings.length)].split(',').map(Number);
-    const used = new Set(); fwGrid = new Array(25).fill(''); fwWords = []; fwSel = []; fwHintCell = -1; let ptr = 0;
-    lens.forEach((len, idx) => {
-      const pool = wordBank[len].filter(w => !used.has(w)), word = pool[Math.floor(Math.random() * pool.length)]; used.add(word);
-      const cells = []; for (let k = 0; k < len; k++) { const cellIdx = path[ptr++]; fwGrid[cellIdx] = word[k]; cells.push(cellIdx); }
-      fwWords.push({ word, cells, found: false, color: wordColors[idx % wordColors.length] });
+function getHeaders(extra = {}) {
+  const h = { 'apikey': SB_KEY, 'Content-Type': 'application/json' };
+  if (SB_KEY.startsWith('eyJ')) h['Authorization'] = 'Bearer ' + SB_KEY;
+  return Object.assign(h, extra);
+}
+async function saveScoreToCloud() {
+  if (!SB_KEY || SB_KEY.includes('ВСТАВЬ')) return;
+  const uid = String(user.id || launchVkId || ('guest_' + Math.floor(Math.random() * 100000)));
+  try {
+    await fetch(`${SB_URL}/rest/v1/players?on_conflict=id`, {
+      method: 'POST',
+      headers: getHeaders({ 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify({ id: uid, name: getName(), coins: state.coins, lvl: state.fwLvl, blitz: state.bestBlitz })
     });
-    renderFillword();
-  }
-  function isAdjacent(a, b) { return Math.abs(Math.floor(a / 5) - Math.floor(b / 5)) + Math.abs((a % 5) - (b % 5)) === 1; }
-  function renderFillword() {
-    const solvedMap = {}; fwWords.forEach(w => { if (w.found) w.cells.forEach(c => solvedMap[c] = w.color); });
-    if (fwWords.every(w => w.found)) {
-      app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:52px;">🎉</div><h2>Уровень ${state.fwLvl} пройден!</h2><p>Награда за победу: <b>+20 🪙</b></p><button class="btn btn-acc" onclick="state.fwLvl++;state.coins+=20;save();saveScoreToCloud();initFillword(true)">Следующий уровень (-1 ⚡)</button><button class="btn btn-story" onclick="story('Филворды','🧩','Я прошёл ${state.fwLvl} уровень!')">📸 В Историю ${state.storyDate===today?'':'(+100 🪙)'}</button></div>`;
-      return;
-    }
-    const tagsHtml = fwWords.map(w => `<span class="fw-tag ${w.found?'done':''}">${w.found ? w.word : '?'.repeat(w.word.length) + ' (' + w.word.length + ')'}</span>`).join('');
-    const curWordStr = fwSel.map(i => fwGrid[i]).join('');
-    let gridHtml = '';
-    for (let i = 0; i < 25; i++) {
-      const bg = solvedMap[i] ? `background:${solvedMap[i]};color:#fff;` : '', cls = `fw-cell ${fwSel.includes(i)?'sel':''} ${fwHintCell===i?'hint':''}`;
-      gridHtml += `<div class="${cls}" style="${bg}" data-idx="${i}" onpointerdown="fwStart(${i})" onpointerenter="fwMove(${i})">${fwGrid[i]}</div>`;
-    }
-    app.innerHTML = `<div class="card"><div class="p-txt"><span>🧩 Уровень ${state.fwLvl}</span><span>Слов: ${fwWords.filter(w=>w.found).length}/${fwWords.length}</span></div><div style="text-align:center;font-weight:800;font-size:18px;height:24px;color:var(--acc);margin-top:6px;">${curWordStr || 'Проведи пальцем по буквам'}</div><div class="fw-grid" ontouchmove="fwTouchMove(event)" onpointerup="fwEnd()">${gridHtml}</div><div class="fw-words">${tagsHtml}</div><div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-gold" style="margin:0;font-size:13px;" onclick="useHintLetter()">💡 Буква (30 🪙)</button><button class="btn btn-acc" style="margin:0;font-size:13px;" onclick="useHintWord()">✨ Слово (60 🪙)</button></div></div>`;
-  }
-  function fwStart(idx) { if (fwWords.some(w => w.found && w.cells.includes(idx))) return; fwDragging = true; fwSel = [idx]; renderFillword(); }
-  function fwMove(idx) { if (!fwDragging || fwWords.some(w => w.found && w.cells.includes(idx))) return; if (fwSel.length >= 2 && fwSel[fwSel.length - 2] === idx) { fwSel.pop(); renderFillword(); return; } if (!fwSel.includes(idx) && isAdjacent(fwSel[fwSel.length - 1], idx)) { fwSel.push(idx); renderFillword(); } }
-  function fwTouchMove(e) { if (!fwDragging) return; const t = e.touches, el = document.elementFromPoint(t.clientX, t.clientY); if (el && el.dataset && el.dataset.idx !== undefined) fwMove(Number(el.dataset.idx)); }
-  function fwEnd() { if (!fwDragging) return; fwDragging = false; const wordStr = fwSel.map(i => fwGrid[i]).join(''), match = fwWords.find(w => !w.found && w.word === wordStr); if (match) { match.found = true; fwHintCell = -1; } fwSel = []; renderFillword(); }
-  window.addEventListener('pointerup', fwEnd);
-  function useHintLetter() { if (state.coins < 30) { alert('Недостаточно монет (нужно 30 🪙)!'); return; } const u = fwWords.find(w => !w.found); if (u) { state.coins -= 30; fwHintCell = u.cells; save(); renderFillword(); } }
-  function useHintWord() { if (state.coins < 60) { alert('Недостаточно монет (нужно 60 🪙)!'); return; } const u = fwWords.find(w => !w.found); if (u) { state.coins -= 60; u.found = true; fwHintCell = -1; save(); renderFillword(); } }
-
-  function renderBlitzHome() {
-    clearInterval(bTimer);
-    const myId = String(user.id || launchVkId || ('guest_' + getName()));
-    let list = realLeaders.map(p => ({ name: p.name + (p.id === myId ? ' (Ты)' : ''), pts: p.blitz || 0, me: p.id === myId }));
-    if (!list.some(p => p.me)) list.push({ name: getName() + ' (Ты)', pts: state.bestBlitz, me: true });
-    if (list.length < 4) list.push({ name: 'Максим Волков', pts: 120 }, { name: 'Алина Смирнова', pts: 60 });
-    list.sort((a, b) => b.pts - a.pts);
-
-    const lbHtml = list.slice(0, 10).map((p, idx) => `<div class="lb-row ${p.me ? 'lb-me' : ''}"><span>${idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '#' + (idx + 1)} ${p.name}</span><span>${p.pts} очк.</span></div>`).join('');
-    app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:44px;">⚡</div><h2>Турбо-Блиц (3 в 1)</h2><p>Правда/Миф, Викторина и Быстрый счёт на время (12 сек)!</p><button class="btn btn-acc" onclick="startBlitz()">Играть (-1 ⚡)</button></div><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><h3 style="margin:0;">🏆 Топ игроков</h3><button class="btn btn-sec" style="width:auto;margin:0;padding:6px 10px;font-size:12px;" onclick="loadRealLeaders()">🔄 Обновить</button></div>${lbHtml}</div>`;
-  }
-  function startBlitz() { if (!spendEnergy()) return; bScore = 0; bLives = 3; bCombo = 1; nextBlitzQ(); }
-  function genBlitzRound() {
-    const mode = Math.floor(Math.random() * 3);
-    if (mode === 0) { const it = tfPool[Math.floor(Math.random() * tfPool.length)]; return { tag: "Правда или Миф", q: it.q, opts: ["✅ Правда", "❌ Миф"], ans: it.a ? "✅ Правда" : "❌ Миф" }; }
-    if (mode === 1) { const it = quizPool[Math.floor(Math.random() * quizPool.length)]; return { tag: "Эрудиция", q: it.q, opts: shuffle(it.opts), ans: it.ans }; }
-    const a = Math.floor(Math.random() * 14) + 6, b = Math.floor(Math.random() * 8) + 3, c = Math.floor(Math.random() * 20) + 5, r = a * b + c;
-    return { tag: "Быстрый счёт", q: `Сколько будет: ${a} × ${b} + ${c} ?`, opts: shuffle([r, r + 10, r - 4, r + 2]).map(String), ans: String(r) };
-  }
-  function nextBlitzQ() {
-    clearInterval(bTimer);
-    if (bLives <= 0) {
-      const isNew = bScore > state.bestBlitz;
-      if (isNew) { state.bestBlitz = bScore; save(); }
-      saveScoreToCloud().then(loadRealLeaders);
-      app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:48px;">💥</div><h2>${isNew?'🎉 Новый рекорд!':'Жизни закончились!'}</h2><p>Очки: <b>${bScore}</b> (Лучший: ${state.bestBlitz})</p><button class="btn btn-story" onclick="story('Турбо-Блиц','🏆','Рекорд: ${state.bestBlitz} очк.!')">📸 В Историю ${state.storyDate===today?'':'(+100 🪙)'}</button><button class="btn btn-acc" onclick="startBlitz()">Сыграть ещё (-1 ⚡)</button><button class="btn btn-sec" onclick="renderBlitzHome()">К рейтингу</button></div>`;
-      return;
-    }
-    curBlitzObj = genBlitzRound(); bTimeLeft = 12;
-    const btns = curBlitzObj.opts.map(o => `<button class="btn btn-opt" onclick="ansBlitz('${o}')">${o}</button>`).join('');
-    app.innerHTML = `<div class="card"><div class="p-txt"><span>${'❤️'.repeat(bLives)}</span><span>Очки: ${bScore} (x${bCombo})</span></div><div class="p-bar"><div class="p-fill" id="tBar" style="width:100%"></div></div><div style="font-size:12px;color:var(--acc);font-weight:700;margin-bottom:6px;">${curBlitzObj.tag} • <span id="tSec">12</span>с</div><h2>${curBlitzObj.q}</h2>${btns}</div>`;
-    bTimer = setInterval(() => { bTimeLeft--; const bar = document.getElementById('tBar'), sec = document.getElementById('tSec'); if (bar) bar.style.width = Math.max(0, (bTimeLeft / 12) * 100) + '%'; if (sec) sec.innerText = bTimeLeft; if (bTimeLeft <= 0) { clearInterval(bTimer); bLives--; bCombo = 1; nextBlitzQ(); } }, 1000);
-  }
-  function ansBlitz(pick) { clearInterval(bTimer); if (pick === curBlitzObj.ans) { bScore += 10 * bCombo; bCombo = Math.min(5, bCombo + 1); state.coins += 2; save(); } else { bLives--; bCombo = 1; } nextBlitzQ(); }
-
-  function renderOracle() {
-    const s = state.oSeed, txt = `${oPart1[s % oPart1.length]} ${oPart2[(s * 3) % oPart2.length]} ${oPart3[(s * 7) % oPart3.length]}`;
-    app.innerHTML = `<div class="card"><h2>🔮 Оракул судьбы</h2><p style="font-size:16px;color:var(--text);font-weight:500;">«${txt}»</p>${state.daily===today?'<button class="btn btn-sec" disabled>✅ Бонус за сегодня получен</button>':'<button class="btn btn-gold" onclick="state.daily=today;state.coins+=30;save();renderOracle()">Забрать ежедневный бонус +30 🪙</button>'}<button class="btn btn-acc" onclick="state.oSeed=Math.floor(Math.random()*9999);save();renderOracle()">🔄 Новое предсказание</button></div><div class="card"><h2>🎰 Колесо Фортуны</h2>${state.wheelDate===today?'<button class="btn btn-sec" disabled>✅ Попытка на сегодня использована</button>':'<button class="btn btn-gold" onclick="spinWheel()">🎁 Крутить бесплатно (1 раз в день)</button>'}<div id="wRes" style="margin-top:10px;text-align:center;font-weight:700;"></div></div><div class="card"><h2>💘 Совместимость</h2><input class="input-box" id="n1" value="${getName()}"><input class="input-box" id="n2" placeholder="Имя друга или пары"><button class="btn btn-acc" onclick="love()">Проверить</button><div id="lRes" style="margin-top:10px;"></div></div>`;
-  }
-  function spinWheel() { state.wheelDate = today; const pr=[{t:'+40 🪙!',f:()=>state.coins+=40},{t:'+80 🪙 Джекпот!',f:()=>state.coins+=80},{t:'+2 ⚡ Энергии!',f:()=>state.energy=Math.min(maxE(),state.energy+2)}]; const w=pr[Math.floor(Math.random()*pr.length)]; w.f(); save(); renderOracle(); document.getElementById('wRes').innerText='Выигрыш: '+w.t; }
-  function love() { const a=document.getElementById('n1').value.trim(), b=document.getElementById('n2').value.trim(); if(!a||!b)return; const pct=55+((a+b).split('').reduce((s,c)=>s+c.charCodeAt(0),0)%45); document.getElementById('lRes').innerHTML=`<div style="text-align:center;padding:10px;background:var(--btn);border-radius:12px;"><div style="font-size:26px;font-weight:800;color:var(--acc);">${pct}% ❤️</div><button class="btn btn-story" onclick="story('Совместимость','❤️','${a}+${b}=${pct}%')">📸 В Историю</button></div>`; }
-
-  function renderProfile() {
-    if (!state.owned) state.owned = [];
-    const rk = state.fwLvl >= 10 ? '🏆 Мастер слов' : (state.fwLvl >= 4 ? '🔥 Эрудит' : '🌱 Искатель'), ava = state.activeAva || '😎';
-    const items = [{ id: 't_def', type: 'theme', val: '', name: '🎨 Классика ВК', price: 0 },{ id: 't_cyber', type: 'theme', val: 'theme-cyber', name: '🌌 Киберпанк Неон', price: 150 },{ id: 't_gold', type: 'theme', val: 'theme-gold', name: '👑 Золотой Люкс', price: 300 },{ id: 'a_dragon', type: 'ava', val: '🐲', name: '?? Аватар: Дракон', price: 120 },{ id: 'a_alien', type: 'ava', val: '👽', name: '👽 Аватар: Пришелец', price: 180 },{ id: 'a_crown', type: 'ava', val: '👑', name: '👑 Аватар: Король', price: 250 }];
-    const shopHtml = items.map(it => {
-      const bought = it.price === 0 || state.owned.includes(it.id), eq = (it.type === 'theme' && (state.activeTheme || '') === it.val) || (it.type === 'ava' && ava === it.val);
-      let b = `<button class="btn btn-gold" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="buyItem('${it.id}',${it.price},'${it.type}','${it.val}')">${it.price} 🪙</button>`;
-      if (eq) b = `<span style="color:var(--grn);font-weight:700;font-size:13px;">✅ Надето</span>`; else if (bought) b = `<button class="btn btn-sec" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="equipItem('${it.type}','${it.val}')">Выбрать</button>`;
-      return `<div class="lb-row"><span>${it.name}</span>${b}</div>`;
-    }).join('');
-    app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:52px;cursor:pointer;" onclick="adminTap()">${ava}</div><h2 style="margin:6px 0;">${getName()}</h2><div style="color:var(--acc);font-weight:700;">${rk}</div><div style="display:flex;justify-content:space-around;margin-top:16px;padding-top:12px;border-top:1px solid var(--btn);"><div><b>Ур. ${state.fwLvl}</b><div style="font-size:12px;color:var(--sub);">Филворды</div></div><div><b style="color:var(--gold);">${state.coins}</b><div style="font-size:12px;color:var(--sub);">Монет</div></div><div><b style="color:var(--acc);">${state.bestBlitz}</b><div style="font-size:12px;color:var(--sub);">Рекорд Блиц</div></div></div><button class="btn btn-grn" onclick="inviteFriend(false)">👥 Позвать друзей (+50 🪙)</button></div><div class="card"><h3 style="margin-top:0;">✏️ Сменить никнейм</h3><input class="input-box" id="nickInp" maxlength="16" placeholder="Новый ник (2–16 символов)" style="margin-top:0;"><button class="btn btn-acc" onclick="changeNick()">Установить ник (100 🪙)</button></div><div class="card"><h3 style="margin-top:0;">🛒 Магазин и улучшения</h3><div class="lb-row"><span>⚡ Макс. энергия (${maxE()} → ${maxE()+1})</span><button class="btn btn-acc" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="upgradeEnergy()">200 🪙</button></div>${shopHtml}</div>`;
-  }
-  function changeNick() { const v = document.getElementById('nickInp').value.trim(); if (v.length < 2) { alert('От 2 до 16 символов!'); return; } if (state.coins < 100) { alert('Нужно 100 🪙!'); return; } state.coins -= 100; state.customNick = v; save(); saveScoreToCloud(); renderProfile(); }
-  function buyItem(id, price, type, val) { if (state.coins < price) { alert('Недостаточно монет!'); return; } state.coins -= price; state.owned.push(id); equipItem(type, val); }
-  function equipItem(type, val) { if (type === 'theme') { state.activeTheme = val; applyCosmetics(); } if (type === 'ava') state.activeAva = val; save(); renderProfile(); }
-  function upgradeEnergy() { if (state.coins < 200) { alert('Нужно 200 🪙!'); return; } state.coins -= 200; state.maxE = maxE() + 1; state.energy = maxE(); save(); renderProfile(); }
-
-  const ADMIN_PIN = "7777";
-  let admTaps = 0;
-  function adminTap() { admTaps++; if (admTaps >= 5) { admTaps = 0; if (prompt("Введите ПИН-код админа:") === ADMIN_PIN) openAdmin(); } }
-  function openAdmin() {
-    app.innerHTML = `<div class="card" style="border:2px solid var(--red);"><h2 style="color:var(--red);">🛠 Админ-панель</h2><p>VK ID: <b>${user.id || launchVkId || 'Тест'}</b></p><button class="btn btn-gold" onclick="state.coins+=1000;save();openAdmin()">+1000 🪙 Монет</button><button class="btn btn-acc" onclick="state.energy=maxE();save();openAdmin()">⚡ Восстановить энергию</button><button class="btn btn-grn" onclick="state.fwLvl++;save();fwWords=[];alert('Уровень: '+state.fwLvl);openAdmin()">🧩 +1 уровень (сейчас ${state.fwLvl})</button><button class="btn btn-acc" onclick="state.owned=['t_cyber','t_gold','a_dragon','a_alien','a_crown'];save();alert('Весь магазин открыт!')">🛒 Открыть весь магазин</button><button class="btn btn-red" onclick="if(confirm('Сбросить прогресс?')){localStorage.removeItem('vk_fw_live');location.reload();}">🗑 Сбросить прогресс</button><button class="btn btn-sec" onclick="renderProfile()">← Выйти</button></div>`;
-  }
-
-  function story(tt, em, rt) {
-    if (state.storyDate !== today) { state.storyDate = today; state.coins += 100; save(); }
-    const c = document.getElementById('storyCanvas'), ctx = c.getContext('2d'), g = ctx.createLinearGradient(0,0,1080,1920);
-    g.addColorStop(0,'#2688eb'); g.addColorStop(1,'#8e2de2'); ctx.fillStyle = g; ctx.fillRect(0,0,1080,1920);
-    ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.font = 'bold 52px sans-serif'; ctx.fillText(tt,540,420);
-    ctx.font = '230px sans-serif'; ctx.fillText(em,540,820); ctx.font = 'bold 64px sans-serif'; ctx.fillText(rt,540,1080);
-    sendVK('VKWebAppShowStoryBox',{background_type:'image',blob:c.toDataURL('image/png'),attachment:{text:'open',type:'url',url:APP_LINK}});
-  }
+  } catch (e) {}
+}
+async function loadRealLeaders() {
+  if (!SB_KEY || SB_KEY.includes('ВСТАВЬ')) return;
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/players?select=id,name,blitz&order=blitz.desc&limit=10`, { headers: getHeaders() });
+    if (res.ok) { realLeaders = await res.json(); if (curTab === 'blitz') renderBlitzHome(); }
+  } catch (e) {}
+}
+setTimeout(() => { saveScoreToCloud(); loadRealLeaders(); }, 1000);
+function inviteFriend(bonusEnergy) {
+  sendVK('VKWebAppShare', { link: APP_LINK });
+  if (bonusEnergy) { state.energy = Math.min(maxE(), state.energy + 2); save(); render(); }
+  else { state.coins += 50; save(); render(); }
+}
+function spendEnergy() {
+  syncEnergy();
+  if (state.energy <= 0) { openEnergyModal(); return false; }
+  if (state.energy === maxE()) state.lastEnergyTs = Date.now();
+  state.energy--; save(); return true;
+}
+function openEnergyModal() {
+  clearInterval(bTimer);
+  const m = Math.max(1, Math.ceil((REGEN_MS - (Date.now() - state.lastEnergyTs)) / 60000));
+  app.innerHTML = `<div class="card" style="text-align:center;"><h2>⚡ Энергия закончилась</h2><p>+1 ⚡ через <b>${m} мин.</b></p><button class="btn btn-acc" onclick="inviteFriend(true)">👥 Позвать друга (+2 ⚡)</button><button class="btn btn-gold" onclick="if(state.coins>=80){state.coins-=80;state.energy=maxE();save();render();}else alert('Нужно 80 🪙!')">Заряд за 80 🪙</button><button class="btn btn-sec" onclick="render()">← Назад</button></div>`;
+}
+function switchTab(t, el) {
+  clearInterval(bTimer); curTab = t;
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  if (t === 'blitz') loadRealLeaders();
   render();
+}
+function render() {
+  clearInterval(bTimer);
+  if (curTab === 'fw') { if (!fwWords.length) initFillword(false); else renderFillword(); }
+  else if (curTab === 'blitz') renderBlitzHome();
+  else if (curTab === 'oracle') renderOracle();
+  else renderProfile();
+}
+
+function initFillword(costEnergy) {
+  if (costEnergy && !spendEnergy()) return;
+  const lens = layoutStrings[Math.floor(Math.random() * layoutStrings.length)].split(',').map(Number);
+  const path = pathStrings[Math.floor(Math.random() * pathStrings.length)].split(',').map(Number);
+  const used = new Set(); fwGrid = new Array(25).fill(''); fwWords = []; fwSel = []; fwHintCell = -1; let ptr = 0;
+  lens.forEach((len, idx) => {
+    const pool = wordBank[len].filter(w => !used.has(w));
+    const word = pool[Math.floor(Math.random() * pool.length)];
+    used.add(word);
+    const cells = [];
+    for (let k = 0; k < len; k++) { const c = path[ptr++]; fwGrid[c] = word[k]; cells.push(c); }
+    fwWords.push({ word, cells, found: false, color: wordColors[idx % wordColors.length] });
+  });
+  renderFillword();
+}
+function isAdjacent(a, b) { return Math.abs(Math.floor(a / 5) - Math.floor(b / 5)) + Math.abs((a % 5) - (b % 5)) === 1; }
+function renderFillword() {
+  const solvedMap = {};
+  fwWords.forEach(w => { if (w.found) w.cells.forEach(c => solvedMap[c] = w.color); });
+  if (fwWords.every(w => w.found)) {
+    app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:48px;">🎉</div><h2>Уровень ${state.fwLvl} пройден!</h2><p>Награда: <b>+20 🪙</b></p><button class="btn btn-acc" onclick="state.fwLvl++;state.coins+=20;save();saveScoreToCloud();initFillword(true)">Дальше (-1 ⚡)</button><button class="btn btn-story" onclick="story('Филворды','🧩','Уровень ${state.fwLvl}!')">📸 В Историю</button></div>`;
+    return;
+  }
+  const tags = fwWords.map(w => `<span class="fw-tag ${w.found?'done':''}">${w.found ? w.word : '?'.repeat(w.word.length)}</span>`).join('');
+  const curStr = fwSel.map(i => fwGrid[i]).join('');
+  let grid = '';
+  for (let i = 0; i < 25; i++) {
+    const bg = solvedMap[i] ? `background:${solvedMap[i]};color:#fff;` : '';
+    const cls = `fw-cell ${fwSel.includes(i)?'sel':''} ${fwHintCell===i?'hint':''}`;
+    grid += `<div class="${cls}" style="${bg}" data-idx="${i}" onpointerdown="fwStart(${i})" onpointerenter="fwMove(${i})">${fwGrid[i]}</div>`;
+  }
+  app.innerHTML = `<div class="card"><div class="p-txt"><span>🧩 Ур. ${state.fwLvl}</span><span>${fwWords.filter(w=>w.found).length}/${fwWords.length}</span></div><div style="text-align:center;font-weight:800;font-size:18px;height:24px;color:var(--acc);margin-top:6px;">${curStr || 'Соединяй буквы'}</div><div class="fw-grid" ontouchmove="fwTouchMove(event)" onpointerup="fwEnd()">${grid}</div><div class="fw-words">${tags}</div><div style="display:flex;gap:8px;"><button class="btn btn-gold" style="margin:0;font-size:13px;" onclick="useHintLetter()">💡 Буква (30 🪙)</button><button class="btn btn-acc" style="margin:0;font-size:13px;" onclick="useHintWord()">✨ Слово (60 🪙)</button></div></div>`;
+}
+function fwStart(idx) { if (!fwWords.some(w => w.found && w.cells.includes(idx))) { fwDragging = true; fwSel = [idx]; renderFillword(); } }
+function fwMove(idx) {
+  if (!fwDragging || fwWords.some(w => w.found && w.cells.includes(idx))) return;
+  if (fwSel.length >= 2 && fwSel[fwSel.length - 2] === idx) { fwSel.pop(); renderFillword(); return; }
+  if (!fwSel.includes(idx) && isAdjacent(fwSel[fwSel.length - 1], idx)) { fwSel.push(idx); renderFillword(); }
+}
+function fwTouchMove(e) {
+  if (!fwDragging) return;
+  const t = e.touches, el = document.elementFromPoint(t.clientX, t.clientY);
+  if (el && el.dataset && el.dataset.idx !== undefined) fwMove(Number(el.dataset.idx));
+}
+function fwEnd() {
+  if (!fwDragging) return;
+  fwDragging = false;
+  const str = fwSel.map(i => fwGrid[i]).join('');
+  const m = fwWords.find(w => !w.found && w.word === str);
+  if (m) { m.found = true; fwHintCell = -1; }
+  fwSel = []; renderFillword();
+}
+window.addEventListener('pointerup', fwEnd);
+function useHintLetter() {
+  if (state.coins < 30) { alert('Нужно 30 🪙!'); return; }
+  const u = fwWords.find(w => !w.found);
+  if (u) { state.coins -= 30; fwHintCell = u.cells; save(); renderFillword(); }
+}
+function useHintWord() {
+  if (state.coins < 60) { alert('Нужно 60 🪙!'); return; }
+  const u = fwWords.find(w => !w.found);
+  if (u) { state.coins -= 60; u.found = true; fwHintCell = -1; save(); renderFillword(); }
+}
+
+function renderBlitzHome() {
+  clearInterval(bTimer);
+  const myId = String(user.id || launchVkId || ('guest_' + getName()));
+  let list = realLeaders.map(p => ({ name: p.name + (p.id === myId ? ' (Ты)' : ''), pts: p.blitz || 0, me: p.id === myId }));
+  if (!list.some(p => p.me)) list.push({ name: getName() + ' (Ты)', pts: state.bestBlitz, me: true });
+  if (list.length < 4) list.push({ name: 'Максим Волков', pts: 120 }, { name: 'Алина Смирнова', pts: 60 });
+  list.sort((a, b) => b.pts - a.pts);
+
+  const lb = list.slice(0, 10).map((p, i) => `<div class="lb-row ${p.me?'lb-me':''}"><span>${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)} ${p.name}</span><span>${p.pts} очк.</span></div>`).join('');
+  app.innerHTML = `<div class="card" style="text-align:center;"><h2>⚡ Турбо-Блиц</h2><p>Вопросы и быстрый счёт на время!</p><button class="btn btn-acc" onclick="startBlitz()">Играть (-1 ⚡)</button></div><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><h3 style="margin:0;">🏆 Топ игроков</h3><button class="btn btn-sec" style="width:auto;margin:0;padding:6px 10px;font-size:12px;" onclick="loadRealLeaders()">🔄 Обновить</button></div>${lb}</div>`;
+}
+function startBlitz() { if (spendEnergy()) { bScore = 0; bLives = 3; bCombo = 1; nextBlitzQ(); } }
+function genBlitzRound() {
+  const mode = Math.floor(Math.random() * 3);
+  if (mode === 0) { const it = tfPool[Math.floor(Math.random() * tfPool.length)]; return { tag: "Правда/Миф", q: it.q, opts: ["✅ Правда", "❌ Миф"], ans: it.a ? "✅ Правда" : "❌ Миф" }; }
+  if (mode === 1) { const it = quizPool[Math.floor(Math.random() * quizPool.length)]; return { tag: "Эрудиция", q: it.q, opts: shuffle(it.opts), ans: it.ans }; }
+  const a = Math.floor(Math.random() * 14) + 6, b = Math.floor(Math.random() * 8) + 3, c = Math.floor(Math.random() * 20) + 5, r = a * b + c;
+  return { tag: "Счёт", q: `${a} × ${b} + ${c} = ?`, opts: shuffle([r, r + 10, r - 4, r + 2]).map(String), ans: String(r) };
+}
+function nextBlitzQ() {
+  clearInterval(bTimer);
+  if (bLives <= 0) {
+    const isNew = bScore > state.bestBlitz;
+    if (isNew) { state.bestBlitz = bScore; save(); }
+    saveScoreToCloud().then(loadRealLeaders);
+    app.innerHTML = `<div class="card" style="text-align:center;"><h2>${isNew?'🎉 Новый рекорд!':'Игра окончена'}</h2><p>Очки: <b>${bScore}</b> (Лучший: ${state.bestBlitz})</p><button class="btn btn-story" onclick="story('Турбо-Блиц','🏆','Рекорд: ${state.bestBlitz}!')">📸 В Историю</button><button class="btn btn-acc" onclick="startBlitz()">Ещё раз (-1 ⚡)</button><button class="btn btn-sec" onclick="renderBlitzHome()">К топу</button></div>`;
+    return;
+  }
+  curBlitzObj = genBlitzRound(); bTimeLeft = 12;
+  const btns = curBlitzObj.opts.map(o => `<button class="btn btn-opt" onclick="ansBlitz('${o}')">${o}</button>`).join('');
+  app.innerHTML = `<div class="card"><div class="p-txt"><span>${'❤️'.repeat(bLives)}</span><span>${bScore} (x${bCombo})</span></div><div class="p-bar"><div class="p-fill" id="tBar" style="width:100%"></div></div><div style="font-size:12px;color:var(--acc);font-weight:700;">${curBlitzObj.tag} • <span id="tSec">12</span>с</div><h2>${curBlitzObj.q}</h2>${btns}</div>`;
+  bTimer = setInterval(() => {
+    bTimeLeft--;
+    const bar = document.getElementById('tBar'), sec = document.getElementById('tSec');
+    if (bar) bar.style.width = Math.max(0, (bTimeLeft / 12) * 100) + '%';
+    if (sec) sec.innerText = bTimeLeft;
+    if (bTimeLeft <= 0) { clearInterval(bTimer); bLives--; bCombo = 1; nextBlitzQ(); }
+  }, 1000);
+}
+function ansBlitz(pick) {
+  clearInterval(bTimer);
+  if (pick === curBlitzObj.ans) { bScore += 10 * bCombo; bCombo = Math.min(5, bCombo + 1); state.coins += 2; save(); }
+  else { bLives--; bCombo = 1; }
+  nextBlitzQ();
+}
+
+function renderOracle() {
+  const s = state.oSeed, txt = `${oPart1[s % oPart1.length]} ${oPart2[(s * 3) % oPart2.length]} ${oPart3[(s * 7) % oPart3.length]}`;
+  app.innerHTML = `<div class="card"><h2>🔮 Оракул</h2><p style="font-size:16px;color:var(--text);">«${txt}»</p>${state.daily===today?'<button class="btn btn-sec" disabled>✅ Бонус получен</button>':'<button class="btn btn-gold" onclick="state.daily=today;state.coins+=30;save();renderOracle()">Бонус дня +30 🪙</button>'}<button class="btn btn-acc" onclick="state.oSeed=Math.floor(Math.random()*9999);save();renderOracle()">🔄 Новое</button></div><div class="card"><h2>🎰 Колесо</h2>${state.wheelDate===today?'<button class="btn btn-sec" disabled>✅ Использовано</button>':'<button class="btn btn-gold" onclick="spinWheel()">🎁 Крутить бесплатно</button>'}<div id="wRes" style="margin-top:10px;text-align:center;font-weight:700;"></div></div><div class="card"><h2>💘 Совместимость</h2><input class="input-box" id="n1" value="${getName()}"><input class="input-box" id="n2" placeholder="Имя друга"><button class="btn btn-acc" onclick="love()">Проверить</button><div id="lRes" style="margin-top:10px;"></div></div>`;
+}
+function spinWheel() {
+  state.wheelDate = today;
+  const pr = [{t:'+40 🪙!',f:()=>state.coins+=40},{t:'+80 🪙!',f:()=>state.coins+=80},{t:'+2 ⚡!',f:()=>state.energy=Math.min(maxE(),state.energy+2)}];
+  const w = pr[Math.floor(Math.random()*pr.length)]; w.f(); save(); renderOracle();
+  document.getElementById('wRes').innerText = 'Выигрыш: ' + w.t;
+}
+function love() {
+  const a = document.getElementById('n1').value.trim(), b = document.getElementById('n2').value.trim();
+  if (!a || !b) return;
+  const pct = 55 + ((a + b).split('').reduce((s, c) => s + c.charCodeAt(0), 0) % 45);
+  document.getElementById('lRes').innerHTML = `<div style="text-align:center;padding:10px;background:var(--btn);border-radius:12px;"><div style="font-size:26px;font-weight:800;color:var(--acc);">${pct}% ❤️</div><button class="btn btn-story" onclick="story('Совместимость','❤️','${a}+${b}=${pct}%')">📸 В Историю</button></div>`;
+}
+
+function renderProfile() {
+  if (!state.owned) state.owned = [];
+  const rk = state.fwLvl >= 10 ? '🏆 Мастер слов' : (state.fwLvl >= 4 ? '🔥 Эрудит' : '🌱 Искатель'), ava = state.activeAva || '😎';
+  const items = [
+    { id: 't_def', type: 'theme', val: '', name: '🎨 Классика', price: 0 },
+    { id: 't_cyber', type: 'theme', val: 'theme-cyber', name: '🌌 Киберпанк', price: 150 },
+    { id: 't_gold', type: 'theme', val: 'theme-gold', name: '👑 Золото', price: 300 },
+    { id: 'a_dragon', type: 'ava', val: '🐲', name: '🐲 Дракон', price: 120 },
+    { id: 'a_crown', type: 'ava', val: '👑', name: '👑 Король', price: 250 }
+  ];
+  const shop = items.map(it => {
+    const bought = it.price === 0 || state.owned.includes(it.id);
+    const eq = (it.type === 'theme' && (state.activeTheme || '') === it.val) || (it.type === 'ava' && ava === it.val);
+    let b = `<button class="btn btn-gold" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="buyItem('${it.id}',${it.price},'${it.type}','${it.val}')">${it.price} 🪙</button>`;
+    if (eq) b = `<span style="color:var(--grn);font-weight:700;font-size:13px;">✅ Надето</span>`;
+    else if (bought) b = `<button class="btn btn-sec" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="equipItem('${it.type}','${it.val}')">Выбрать</button>`;
+    return `<div class="lb-row"><span>${it.name}</span>${b}</div>`;
+  }).join('');
+  app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:52px;" onclick="adminTap()">${ava}</div><h2>${getName()}</h2><div style="color:var(--acc);font-weight:700;">${rk}</div><div style="display:flex;justify-content:space-around;margin-top:16px;padding-top:12px;border-top:1px solid var(--btn);"><div><b>Ур. ${state.fwLvl}</b><div style="font-size:12px;color:var(--sub);">Филворды</div></div><div><b style="color:var(--gold);">${state.coins}</b><div style="font-size:12px;color:var(--sub);">Монет</div></div><div><b style="color:var(--acc);">${state.bestBlitz}</b><div style="font-size:12px;color:var(--sub);">Рекорд</div></div></div><button class="btn btn-grn" onclick="inviteFriend(false)">👥 Позвать друзей (+50 🪙)</button></div><div class="card"><h3>✏️ Сменить ник</h3><input class="input-box" id="nickInp" maxlength="16" placeholder="Новый ник"><button class="btn btn-acc" onclick="changeNick()">Установить (100 🪙)</button></div><div class="card"><h3>🛒 Магазин</h3><div class="lb-row"><span>⚡ Макс. энергия (${maxE()})</span><button class="btn btn-acc" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="upgradeEnergy()">200 🪙</button></div>${shop}</div>`;
+}
+function changeNick() {
+  const v = document.getElementById('nickInp').value.trim();
+  if (v.length < 2) { alert('От 2 символов!'); return; }
+  if (state.coins < 100) { alert('Нужно 100 🪙!'); return; }
+  state.coins -= 100; state.customNick = v; save(); saveScoreToCloud(); renderProfile();
+}
+function buyItem(id, price, type, val) {
+  if (state.coins < price) { alert('Недостаточно монет!'); return; }
+  state.coins -= price; state.owned.push(id); equipItem(type, val);
+}
+function equipItem(type, val) {
+  if (type === 'theme') { state.activeTheme = val; applyCosmetics(); }
+  if (type === 'ava') state.activeAva = val;
+  save(); renderProfile();
+}
+function upgradeEnergy() {
+  if (state.coins < 200) { alert('Нужно 200 🪙!'); return; }
+  state.coins -= 200; state.maxE = maxE() + 1; state.energy = maxE(); save(); renderProfile();
+}
+let admTaps = 0;
+function adminTap() {
+  admTaps++;
+  if (admTaps >= 5) {
+    admTaps = 0;
+    if (prompt("ПИН:") === "7777") {
+      app.innerHTML = `<div class="card"><h2>🛠 Админ</h2><button class="btn btn-gold" onclick="state.coins+=1000;save();renderProfile()">+1000 🪙</button><button class="btn btn-acc" onclick="state.energy=maxE();save();renderProfile()">⚡ Энергия</button><button class="btn btn-sec" onclick="renderProfile()">Назад</button></div>`;
+    }
+  }
+}
+function story(tt, em, rt) {
+  if (state.storyDate !== today) { state.storyDate = today; state.coins += 100; save(); }
+  const c = document.getElementById('storyCanvas'), ctx = c.getContext('2d'), g = ctx.createLinearGradient(0,0,1080,1920);
+  g.addColorStop(0,'#2688eb'); g.addColorStop(1,'#8e2de2'); ctx.fillStyle = g; ctx.fillRect(0,0,1080,1920);
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.font = 'bold 52px sans-serif'; ctx.fillText(tt,540,420);
+  ctx.font = '230px sans-serif'; ctx.fillText(em,540,820); ctx.font = 'bold 64px sans-serif'; ctx.fillText(rt,540,1080);
+  sendVK('VKWebAppShowStoryBox',{background_type:'image',blob:c.toDataURL('image/png'),attachment:{text:'open',type:'url',url:APP_LINK}});
+}
+render();
 </script>
 </body>
 </html>
