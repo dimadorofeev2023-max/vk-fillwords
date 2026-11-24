@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Филворды, Блиц и Оракул</title>
-  <script src="https://unpkg.com"></script>
   <style>
     :root { --bg:#ebedf0; --card:#fff; --text:#000; --sub:#6d7885; --btn:#f2f3f5; --acc:#2688eb; --grn:#4bb34b; --gold:#ffa000; --red:#ff3347; }
     @media (prefers-color-scheme: dark) { :root { --bg:#0a0a0a; --card:#19191a; --text:#e1e3e6; --sub:#76787a; --btn:#2c2d2e; --acc:#529ef4; } }
@@ -134,9 +133,11 @@
       if (res && res.success) { if (addCoins > 0) state.coins += addCoins; if (fullEnergy) state.energy = maxE(); save(); render(); alert('Успешно оплачено! Бонус начислен 🎉'); }
     }).catch(() => alert('Оплата отменена или ещё не настроена в кабинете ВК.'));
   }
-  function sendVK(m, p = {}) { return (window.vkBridge && window.vkBridge.send) ? window.vkBridge.send(m, p).catch(() => null) : Promise.resolve(null); }
-  if (window.vkBridge) window.vkBridge.subscribe(e => { if (e.detail.type === 'VKWebAppUpdateConfig' && e.detail.data.scheme && e.detail.data.scheme.includes('dark')) document.body.classList.add('dark'); });
-  sendVK('VKWebAppInit'); sendVK('VKWebAppGetUserInfo').then(d => { if (d && d.first_name) { user = d; render(); } });
+  function sendVK(m, p = {}) {
+  try { window.parent.postMessage({ handler: m, params: p, type: 'vk-connect' }, '*'); } catch (e) {}
+  return Promise.resolve(null);
+}
+sendVK('VKWebAppInit');
 
   function switchTab(t, el) { clearInterval(bTimer); curTab = t; document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active')); el.classList.add('active'); render(); }
   function render() { clearInterval(bTimer); if (curTab === 'fw') { if (!fwWords.length) initFillword(false); else renderFillword(); } else if (curTab === 'blitz') renderBlitzHome(); else if (curTab === 'oracle') renderOracle(); else renderProfile(); }
