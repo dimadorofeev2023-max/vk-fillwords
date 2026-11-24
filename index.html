@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Филворды, Блиц и Оракул</title>
+  <script src="https://jsdelivr.net"></script>
   <style>
     :root { --bg:#ebedf0; --card:#fff; --text:#000; --sub:#6d7885; --btn:#f2f3f5; --acc:#2688eb; --grn:#4bb34b; --gold:#ffa000; --red:#ff3347; }
     @media (prefers-color-scheme: dark) { :root { --bg:#0a0a0a; --card:#19191a; --text:#e1e3e6; --sub:#76787a; --btn:#2c2d2e; --acc:#529ef4; } }
@@ -138,8 +139,24 @@
     if (d && d.first_name) { user = d; saveScoreToCloud(); render(); }
     if (d && d.scheme && d.scheme.includes('dark')) document.body.classList.add('dark');
   });
-  sendVK('VKWebAppInit');
-  sendVK('VKWebAppGetUserInfo', { request_id: 'u1' });
+  function sendVK(m, p = {}) {
+  if (window.vkBridge && window.vkBridge.send) {
+    return window.vkBridge.send(m, p).catch(() => null);
+  }
+  return Promise.resolve(null);
+}
+if (window.vkBridge) {
+  window.vkBridge.subscribe(e => {
+    if (e.detail && e.detail.type === 'VKWebAppUpdateConfig' && e.detail.data.scheme && e.detail.data.scheme.includes('dark')) {
+      document.body.classList.add('dark');
+    }
+  });
+}
+sendVK('VKWebAppInit');
+sendVK('VKWebAppGetUserInfo').then(d => {
+  if (d && d.first_name) { user = d; saveScoreToCloud(); render(); }
+});
+ 
 
   function getHeaders(extra = {}) {
     const h = { 'apikey': SB_KEY, 'Content-Type': 'application/json' };
