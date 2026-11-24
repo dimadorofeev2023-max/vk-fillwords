@@ -6,7 +6,6 @@
   <title>Филворды, Блиц и Оракул</title>
   <style>
     :root { --bg:#ebedf0; --card:#fff; --text:#000; --sub:#6d7885; --btn:#f2f3f5; --acc:#2688eb; --grn:#4bb34b; --gold:#ffa000; --red:#ff3347; }
-    @media (prefers-color-scheme: dark) { :root { --bg:#0a0a0a; --card:#19191a; --text:#e1e3e6; --sub:#76787a; --btn:#2c2d2e; --acc:#529ef4; } }
     body.dark { --bg:#0a0a0a; --card:#19191a; --text:#e1e3e6; --sub:#76787a; --btn:#2c2d2e; --acc:#529ef4; }
     body.theme-cyber { --bg:#120428; --card:#1f0944; --text:#f3e5f5; --sub:#b388ff; --btn:#311068; --acc:#ff007f; }
     body.theme-gold { --bg:#14120c; --card:#221e14; --text:#fff8e1; --sub:#bcaaa4; --btn:#332c1d; --acc:#ffb300; }
@@ -51,7 +50,7 @@
     <div class="pill" style="color:var(--acc);" id="energyBox" onclick="openEnergyModal()">⚡ 5/5</div>
     <div class="pill" style="color:var(--gold);" id="coinBox">🪙 60</div>
   </div>
-  <div id="app"></div>
+  <div id="app">Загрузка...</div>
 </div>
 <div class="nav">
   <button class="nav-item active" onclick="switchTab('fw',this)"><span style="font-size:20px;">🧩</span>Филворды</button>
@@ -62,7 +61,10 @@
 <canvas id="storyCanvas" width="1080" height="1920" style="display:none;"></canvas>
 <script>
   const APP_LINK = 'https://vk.com';
+  const SB_URL = "https://supabase.co";
+  const SB_KEY = "sb_publishable_gEEOzgYJs17G79IIY47qmA_rBmv2M2y";
   const REGEN_MS = 10 * 60 * 1000;
+
   const wordBank = {
     4: ["КОФЕ","МОРЕ","ЛУНА","СНЕГ","ЗВУК","РИТМ","ИГРА","СВЕТ","КЛЮЧ","ПЛАН","МОСТ","ПАРК","ЗНАК","ВКУС","УЮТ","ГРОМ","ШАНС","КЛАД","МАЯК","НЕБО"],
     5: ["ОКЕАН","ВЕТЕР","ГОРОД","КНИГА","МЕЧТА","ЗЕМЛЯ","ОГОНЬ","ВРЕМЯ","СЛОВО","ТАЙНА","УСПЕХ","АЛМАЗ","БЕРЕГ","ГОЛОС","ДОЖДЬ","ЗАМОК","ИСКРА","ЛИДЕР","ПОЛЕТ","СЕВЕР"],
@@ -92,7 +94,10 @@
   const oPart2 = ["тебя ждёт приятный финансовый сюрприз", "появится шанс круто изменить планы к лучшему", "старый знакомый принесёт отличную новость", "твоя смелая идея получит поддержку", "удача сама постучится в дверь"];
   const oPart3 = ["— главное, не бойся действовать первым!", "— прислушайся к своей интуиции.", "— скажи «да» новым возможностям!", "— просто сохраняй спокойствие и улыбайся."];
 
-  let user = { id: 0, first_name: 'Игрок', last_name: '' };
+  const urlParams = new URLSearchParams(window.location.search);
+  const launchVkId = Number(urlParams.get('vk_user_id')) || 0;
+  let user = { id: launchVkId, first_name: 'Игрок', last_name: '' };
+  let realLeaders = [];
   let state = JSON.parse(localStorage.getItem('vk_fw_live') || 'null') || {
     coins: 60, energy: 5, maxE: 5, lastEnergyTs: Date.now(), fwLvl: 1, streak: 1, last: '', daily: '', storyDate: '', wheelDate: '', bestBlitz: 0, oSeed: 1, owned: [], activeTheme: '', activeAva: '😎', customNick: ''
   };
@@ -101,7 +106,7 @@
   const app = document.getElementById('app'), today = new Date().toDateString();
 
   function maxE() { return state.maxE || 5; }
-  function getName() { return state.customNick || (user.first_name + (user.last_name ? ' ' + user.last_name : '')); }
+  function getName() { return state.customNick || (user.first_name + (user.last_name ? ' ' + user.last_name : (user.id ? ' #' + String(user.id).slice(-4) : ''))); }
   function applyCosmetics() { document.body.classList.remove('theme-cyber', 'theme-gold'); if (state.activeTheme) document.body.classList.add(state.activeTheme); }
   applyCosmetics();
 
@@ -121,38 +126,20 @@
   }
   if (state.last !== today) { state.streak = (state.last === new Date(Date.now() - 86400000).toDateString()) ? state.streak + 1 : 1; state.last = today; state.oSeed = Math.floor(Math.random() * 999); }
   save(); setInterval(save, 15000);
-  const SB_URL = "https://supabase.co";
-  const SB_KEY = "sb_publishable_gEEOzgYJs17G79IIY47qmA_rBmv2M2y ";
-  let realLeaders = [];
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const launchVkId = Number(urlParams.get('vk_user_id')) || 0;
-  if (launchVkId) user.id = launchVkId;
 
   function sendVK(m, p = {}) {
-  if (window.vkBridge && window.vkBridge.send) {
-    return window.vkBridge.send(m, p).catch(() => null);
+    const str = JSON.stringify(p);
+    try { window.parent.postMessage({ handler: m, params: p, type: 'vk-connect' }, '*'); } catch (e) {}
+    try { if (window.AndroidBridge && window.AndroidBridge[m]) window.AndroidBridge[m](str); } catch (e) {}
+    try { if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers[m]) window.webkit.messageHandlers[m].postMessage(p); } catch (e) {}
   }
-  return Promise.resolve(null);
-}
-if (window.vkBridge) {
-  window.vkBridge.subscribe(e => {
-    if (e.detail && e.detail.type === 'VKWebAppUpdateConfig' && e.detail.data.scheme && e.detail.data.scheme.includes('dark')) {
-      document.body.classList.add('dark');
-    }
+  window.addEventListener('message', e => {
+    const d = e.data && (e.data.data || e.data);
+    if (d && d.first_name) { user = Object.assign(user, d); saveScoreToCloud().then(loadRealLeaders); render(); }
+    if (d && d.scheme && d.scheme.includes('dark')) document.body.classList.add('dark');
   });
-}
-sendVK('VKWebAppInit').then(() => {
-  sendVK('VKWebAppGetUserInfo').then(d => {
-    if (d && d.first_name) {
-      user = Object.assign(user, d);
-      saveScoreToCloud().then(loadRealLeaders);
-      render();
-    }
-  });
-});
-
-
+  sendVK('VKWebAppInit');
+  sendVK('VKWebAppGetUserInfo', { request_id: 'u1' });
 
   function getHeaders(extra = {}) {
     const h = { 'apikey': SB_KEY, 'Content-Type': 'application/json' };
@@ -176,8 +163,7 @@ sendVK('VKWebAppInit').then(() => {
       if (res.ok) { realLeaders = await res.json(); if (curTab === 'blitz') renderBlitzHome(); }
     } catch (e) {}
   }
-  setTimeout(() => { saveScoreToCloud(); loadRealLeaders(); }, 1200);
-
+  setTimeout(() => { saveScoreToCloud(); loadRealLeaders(); }, 1000);
   function inviteFriend(bonusEnergy) {
     sendVK('VKWebAppShare', { link: APP_LINK });
     if (bonusEnergy) { state.energy = Math.min(maxE(), state.energy + 2); save(); render(); }
@@ -189,9 +175,9 @@ sendVK('VKWebAppInit').then(() => {
     const m = Math.max(1, Math.ceil((REGEN_MS - (Date.now() - state.lastEnergyTs)) / 60000));
     app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:48px;">⚡</div><h2>Энергия закончилась</h2><p>+1 ⚡ восстановится через <b>${m} мин.</b>, или пополни сейчас:</p><button class="btn btn-acc" onclick="inviteFriend(true)">👥 Позвать друга (+2 ⚡)</button><button class="btn btn-gold" onclick="if(state.coins>=80){state.coins-=80;state.energy=maxE();save();render();}else alert('Нужно 80 🪙!')">Полный заряд за 80 🪙</button><button class="btn btn-sec" onclick="render()">← Назад</button></div>`;
   }
-
   function switchTab(t, el) { clearInterval(bTimer); curTab = t; document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active')); el.classList.add('active'); if (t === 'blitz') loadRealLeaders(); render(); }
   function render() { clearInterval(bTimer); if (curTab === 'fw') { if (!fwWords.length) initFillword(false); else renderFillword(); } else if (curTab === 'blitz') renderBlitzHome(); else if (curTab === 'oracle') renderOracle(); else renderProfile(); }
+
   function initFillword(costEnergy) {
     if (costEnergy && !spendEnergy()) return;
     const lens = layoutStrings[Math.floor(Math.random() * layoutStrings.length)].split(',').map(Number);
@@ -262,6 +248,7 @@ sendVK('VKWebAppInit').then(() => {
     bTimer = setInterval(() => { bTimeLeft--; const bar = document.getElementById('tBar'), sec = document.getElementById('tSec'); if (bar) bar.style.width = Math.max(0, (bTimeLeft / 12) * 100) + '%'; if (sec) sec.innerText = bTimeLeft; if (bTimeLeft <= 0) { clearInterval(bTimer); bLives--; bCombo = 1; nextBlitzQ(); } }, 1000);
   }
   function ansBlitz(pick) { clearInterval(bTimer); if (pick === curBlitzObj.ans) { bScore += 10 * bCombo; bCombo = Math.min(5, bCombo + 1); state.coins += 2; save(); } else { bLives--; bCombo = 1; } nextBlitzQ(); }
+
   function renderOracle() {
     const s = state.oSeed, txt = `${oPart1[s % oPart1.length]} ${oPart2[(s * 3) % oPart2.length]} ${oPart3[(s * 7) % oPart3.length]}`;
     app.innerHTML = `<div class="card"><h2>🔮 Оракул судьбы</h2><p style="font-size:16px;color:var(--text);font-weight:500;">«${txt}»</p>${state.daily===today?'<button class="btn btn-sec" disabled>✅ Бонус за сегодня получен</button>':'<button class="btn btn-gold" onclick="state.daily=today;state.coins+=30;save();renderOracle()">Забрать ежедневный бонус +30 🪙</button>'}<button class="btn btn-acc" onclick="state.oSeed=Math.floor(Math.random()*9999);save();renderOracle()">🔄 Новое предсказание</button></div><div class="card"><h2>🎰 Колесо Фортуны</h2>${state.wheelDate===today?'<button class="btn btn-sec" disabled>✅ Попытка на сегодня использована</button>':'<button class="btn btn-gold" onclick="spinWheel()">🎁 Крутить бесплатно (1 раз в день)</button>'}<div id="wRes" style="margin-top:10px;text-align:center;font-weight:700;"></div></div><div class="card"><h2>💘 Совместимость</h2><input class="input-box" id="n1" value="${getName()}"><input class="input-box" id="n2" placeholder="Имя друга или пары"><button class="btn btn-acc" onclick="love()">Проверить</button><div id="lRes" style="margin-top:10px;"></div></div>`;
@@ -272,7 +259,7 @@ sendVK('VKWebAppInit').then(() => {
   function renderProfile() {
     if (!state.owned) state.owned = [];
     const rk = state.fwLvl >= 10 ? '🏆 Мастер слов' : (state.fwLvl >= 4 ? '🔥 Эрудит' : '🌱 Искатель'), ava = state.activeAva || '😎';
-    const items = [{ id: 't_def', type: 'theme', val: '', name: '🎨 Классика ВК', price: 0 },{ id: 't_cyber', type: 'theme', val: 'theme-cyber', name: '🌌 Киберпанк Неон', price: 150 },{ id: 't_gold', type: 'theme', val: 'theme-gold', name: '👑 Золотой Люкс', price: 300 },{ id: 'a_dragon', type: 'ava', val: '🐲', name: '🐲 Аватар: Дракон', price: 120 },{ id: 'a_alien', type: 'ava', val: '👽', name: '👽 Аватар: Пришелец', price: 180 },{ id: 'a_crown', type: 'ava', val: '👑', name: '👑 Аватар: Король', price: 250 }];
+    const items = [{ id: 't_def', type: 'theme', val: '', name: '🎨 Классика ВК', price: 0 },{ id: 't_cyber', type: 'theme', val: 'theme-cyber', name: '🌌 Киберпанк Неон', price: 150 },{ id: 't_gold', type: 'theme', val: 'theme-gold', name: '👑 Золотой Люкс', price: 300 },{ id: 'a_dragon', type: 'ava', val: '🐲', name: '?? Аватар: Дракон', price: 120 },{ id: 'a_alien', type: 'ava', val: '👽', name: '👽 Аватар: Пришелец', price: 180 },{ id: 'a_crown', type: 'ava', val: '👑', name: '👑 Аватар: Король', price: 250 }];
     const shopHtml = items.map(it => {
       const bought = it.price === 0 || state.owned.includes(it.id), eq = (it.type === 'theme' && (state.activeTheme || '') === it.val) || (it.type === 'ava' && ava === it.val);
       let b = `<button class="btn btn-gold" style="width:auto;margin:0;padding:8px 12px;font-size:13px;" onclick="buyItem('${it.id}',${it.price},'${it.type}','${it.val}')">${it.price} 🪙</button>`;
