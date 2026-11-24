@@ -126,36 +126,19 @@
   const SB_KEY = "sb_publishable_gEEOzgYJs17G79IIY47qmA_rBmv2M2y ";
   let realLeaders = [];
 
-  function sendVK(m, p = {}) {
-  const str = JSON.stringify(p);
-  try { window.parent.postMessage({ handler: m, params: p, type: 'vk-connect' }, '*'); } catch (e) {}
-  try { if (window.AndroidBridge && window.AndroidBridge[m]) window.AndroidBridge[m](str); } catch (e) {}
-  try { if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers[m]) window.webkit.messageHandlers[m].postMessage(p); } catch (e) {}
-  return Promise.resolve(null);
-}
-
-  window.addEventListener('message', e => {
-    const d = e.data && (e.data.data || e.data);
-    if (d && d.first_name) { user = d; saveScoreToCloud(); render(); }
-    if (d && d.scheme && d.scheme.includes('dark')) document.body.classList.add('dark');
-  });
-  function sendVK(m, p = {}) {
-  if (window.vkBridge && window.vkBridge.send) {
-    return window.vkBridge.send(m, p).catch(() => null);
-  }
-  return Promise.resolve(null);
-}
-if (window.vkBridge) {
-  window.vkBridge.subscribe(e => {
-    if (e.detail && e.detail.type === 'VKWebAppUpdateConfig' && e.detail.data.scheme && e.detail.data.scheme.includes('dark')) {
-      document.body.classList.add('dark');
-    }
-  });
-}
   const urlParams = new URLSearchParams(window.location.search);
   const launchVkId = Number(urlParams.get('vk_user_id')) || 0;
   if (launchVkId) user.id = launchVkId;
 
+  function sendVK(m, p = {}) {
+    if (window.vkBridge && window.vkBridge.send) return window.vkBridge.send(m, p).catch(() => null);
+    return Promise.resolve(null);
+  }
+  if (window.vkBridge) {
+    window.vkBridge.subscribe(e => {
+      if (e.detail && e.detail.type === 'VKWebAppUpdateConfig' && e.detail.data.scheme && e.detail.data.scheme.includes('dark')) document.body.classList.add('dark');
+    });
+  }
   sendVK('VKWebAppInit').then(() => {
     sendVK('VKWebAppGetUserInfo').then(d => {
       if (d && d.first_name) {
@@ -166,34 +149,21 @@ if (window.vkBridge) {
     });
   });
 
-  if (d && d.first_name) { user = d; saveScoreToCloud(); render(); }
-});
- 
-
   function getHeaders(extra = {}) {
     const h = { 'apikey': SB_KEY, 'Content-Type': 'application/json' };
     if (SB_KEY.startsWith('eyJ')) h['Authorization'] = 'Bearer ' + SB_KEY;
     return Object.assign(h, extra);
   }
-    async function saveScoreToCloud() {
+  async function saveScoreToCloud() {
     if (!SB_KEY || SB_KEY.includes("ВСТАВЬ")) return;
     const uid = String(user.id || launchVkId || ('guest_' + Math.floor(Math.random() * 100000)));
-    const playerName = getName();
     try {
       await fetch(`${SB_URL}/rest/v1/players?on_conflict=id`, {
-        method: 'POST',
-        headers: getHeaders({ 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
-        body: JSON.stringify({
-          id: uid,
-          name: playerName,
-          coins: state.coins,
-          lvl: state.fwLvl,
-          blitz: state.bestBlitz
-        })
+        method: 'POST', headers: getHeaders({ 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+        body: JSON.stringify({ id: uid, name: getName(), coins: state.coins, lvl: state.fwLvl, blitz: state.bestBlitz })
       });
     } catch (e) {}
   }
-
   async function loadRealLeaders() {
     if (!SB_KEY || SB_KEY.includes("ВСТАВЬ")) return;
     try {
@@ -255,7 +225,7 @@ if (window.vkBridge) {
 
   function renderBlitzHome() {
     clearInterval(bTimer);
-    const myId = String(user.id || ('guest_' + getName()));
+    const myId = String(user.id || launchVkId || ('guest_' + getName()));
     let list = realLeaders.map(p => ({ name: p.name + (p.id === myId ? ' (Ты)' : ''), pts: p.blitz || 0, me: p.id === myId }));
     if (!list.some(p => p.me)) list.push({ name: getName() + ' (Ты)', pts: state.bestBlitz, me: true });
     if (list.length < 4) list.push({ name: 'Максим Волков', pts: 120 }, { name: 'Алина Смирнова', pts: 60 });
@@ -276,7 +246,8 @@ if (window.vkBridge) {
     clearInterval(bTimer);
     if (bLives <= 0) {
       const isNew = bScore > state.bestBlitz;
-      if (isNew) { state.bestBlitz = bScore; save(); saveScoreToCloud().then(loadRealLeaders); }
+      if (isNew) { state.bestBlitz = bScore; save(); }
+      saveScoreToCloud().then(loadRealLeaders);
       app.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:48px;">💥</div><h2>${isNew?'🎉 Новый рекорд!':'Жизни закончились!'}</h2><p>Очки: <b>${bScore}</b> (Лучший: ${state.bestBlitz})</p><button class="btn btn-story" onclick="story('Турбо-Блиц','🏆','Рекорд: ${state.bestBlitz} очк.!')">📸 В Историю ${state.storyDate===today?'':'(+100 🪙)'}</button><button class="btn btn-acc" onclick="startBlitz()">Сыграть ещё (-1 ⚡)</button><button class="btn btn-sec" onclick="renderBlitzHome()">К рейтингу</button></div>`;
       return;
     }
@@ -314,7 +285,7 @@ if (window.vkBridge) {
   let admTaps = 0;
   function adminTap() { admTaps++; if (admTaps >= 5) { admTaps = 0; if (prompt("Введите ПИН-код админа:") === ADMIN_PIN) openAdmin(); } }
   function openAdmin() {
-    app.innerHTML = `<div class="card" style="border:2px solid var(--red);"><h2 style="color:var(--red);">🛠 Админ-панель</h2><p>VK ID: <b>${user.id || 'Тест'}</b></p><button class="btn btn-gold" onclick="state.coins+=1000;save();openAdmin()">+1000 🪙 Монет</button><button class="btn btn-acc" onclick="state.energy=maxE();save();openAdmin()">⚡ Восстановить энергию</button><button class="btn btn-grn" onclick="state.fwLvl++;save();fwWords=[];alert('Уровень: '+state.fwLvl);openAdmin()">🧩 +1 уровень (сейчас ${state.fwLvl})</button><button class="btn btn-acc" onclick="state.owned=['t_cyber','t_gold','a_dragon','a_alien','a_crown'];save();alert('Весь магазин открыт!')">🛒 Открыть весь магазин</button><button class="btn btn-red" onclick="if(confirm('Сбросить прогресс?')){localStorage.removeItem('vk_fw_live');location.reload();}">🗑 Сбросить прогресс</button><button class="btn btn-sec" onclick="renderProfile()">← Выйти</button></div>`;
+    app.innerHTML = `<div class="card" style="border:2px solid var(--red);"><h2 style="color:var(--red);">🛠 Админ-панель</h2><p>VK ID: <b>${user.id || launchVkId || 'Тест'}</b></p><button class="btn btn-gold" onclick="state.coins+=1000;save();openAdmin()">+1000 🪙 Монет</button><button class="btn btn-acc" onclick="state.energy=maxE();save();openAdmin()">⚡ Восстановить энергию</button><button class="btn btn-grn" onclick="state.fwLvl++;save();fwWords=[];alert('Уровень: '+state.fwLvl);openAdmin()">🧩 +1 уровень (сейчас ${state.fwLvl})</button><button class="btn btn-acc" onclick="state.owned=['t_cyber','t_gold','a_dragon','a_alien','a_crown'];save();alert('Весь магазин открыт!')">🛒 Открыть весь магазин</button><button class="btn btn-red" onclick="if(confirm('Сбросить прогресс?')){localStorage.removeItem('vk_fw_live');location.reload();}">🗑 Сбросить прогресс</button><button class="btn btn-sec" onclick="renderProfile()">← Выйти</button></div>`;
   }
 
   function story(tt, em, rt) {
