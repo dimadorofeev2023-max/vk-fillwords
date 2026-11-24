@@ -180,8 +180,8 @@ async function loadRealLeaders() {
   } catch (e) {}
 }
 setTimeout(() => { saveScoreToCloud(); loadRealLeaders(); }, 1000);
-function inviteFriend(bonusEnergy) {
-  sendVK('VKWebAppShare', { link: APP_LINK });
+  function inviteFriend(bonusEnergy) {
+  sendVK('VKWebAppShare', { link: APP_LINK, text: 'Попробуй побить мой рекорд в Филвордах и Блице!' });
   if (bonusEnergy) { state.energy = Math.min(maxE(), state.energy + 2); save(); render(); }
   else { state.coins += 50; save(); render(); }
 }
